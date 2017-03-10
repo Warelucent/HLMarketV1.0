@@ -35,7 +35,6 @@ class HomeVC: BaseViewController, UIWebViewDelegate {
     func loadURL() -> Void {
         let request = URLRequest(url: URL(string: "http://192.168.15.106:8080/Simple_online/lx")!)
         webView.loadRequest(request)
-        webView.stringByEvaluatingJavaScript
     }
     
     func fc(dataDic: Dictionary<String,String>) -> Void {
