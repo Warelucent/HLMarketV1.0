@@ -10,8 +10,6 @@ import UIKit
 
 class ShopCartStyleCell: UICollectionViewCell {
     
-    
-    
     // 上方盒子视图
     lazy var imageBoxView = {UIView.init()}()
     
@@ -33,6 +31,8 @@ class ShopCartStyleCell: UICollectionViewCell {
     
     lazy var nameLabel = {() -> UILabel in
         let label = UILabel.init()
+        label.font = UIFont.systemFont(ofSize: 12)
+        label.numberOfLines = 2
         return label
     }()
     lazy var sepLineLabel = {() -> UILabel in
@@ -57,9 +57,19 @@ class ShopCartStyleCell: UICollectionViewCell {
     var shopCartModel:ShopCartStyleModel? {
         didSet {
             if (shopCartModel != nil) {
-                imageView.image = UIImage.init(named: (shopCartModel?.goodsAvtarView)!)
-                nameLabel.text  = shopCartModel?.goodsTitle
-                priceLabel.text = shopCartModel?.goodsPrice
+                imageView.image = UIImage.init(named: (shopCartModel?.cGoodsImagePath)!)
+                nameLabel.text  = shopCartModel?.cGoodsName
+                priceLabel.text = "￥" + String.init(format: "%.2f", Float(shopCartModel!.fVipPrice)!)
+            }
+        }
+    }
+    
+    var rightCollectionViewModel:RightCollectionViewModel? {
+        didSet {
+            if (rightCollectionViewModel != nil) {
+                imageView.image = UIImage.init(named: (rightCollectionViewModel?.cGoodsImage)!)
+                nameLabel.text  = rightCollectionViewModel?.cGoodsName
+                priceLabel.text = "￥" + String.init(format: "%.2f", Float(rightCollectionViewModel!.fNormalPrice)!)
             }
         }
     }
@@ -105,21 +115,23 @@ class ShopCartStyleCell: UICollectionViewCell {
         //--
         botBoxView.snp.makeConstraints { (make) in
             make.left.right.equalTo(topBoxView)
-            make.top.equalTo(topBoxView.snp.bottom).offset(5)
-            make.bottom.equalTo(asideBoxView.snp.bottom).offset(-5)
+            make.top.greaterThanOrEqualTo(topBoxView.snp.bottom).offset(5)
+            make.bottom.lessThanOrEqualTo(asideBoxView.snp.bottom).offset(-5)
         }
         
         
         priceLabel.snp.makeConstraints { (make) in
-            make.top.left.equalToSuperview().offset(5)
-            make.bottom.equalToSuperview().offset(-5)
+            make.left.equalToSuperview().offset(5)
+            make.top.lessThanOrEqualToSuperview().offset(5)
+            make.bottom.lessThanOrEqualToSuperview().offset(-5)
             make.right.equalTo(shopcartBtn.snp.left).offset(-5)
         }
         
         shopcartBtn.snp.makeConstraints { (make) in
-            make.top.equalToSuperview().offset(5)
-            make.bottom.right.equalToSuperview().offset(-5)
-            make.width.equalTo(botBoxView.snp.height).offset(-10)
+            make.right.equalToSuperview().offset(-5)
+            make.top.greaterThanOrEqualToSuperview()
+            make.bottom.lessThanOrEqualToSuperview().offset(-5)
+            make.width.equalTo(shopcartBtn.snp.height)
         }
         
         

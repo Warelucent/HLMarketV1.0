@@ -11,7 +11,6 @@ import UIKit
 
 class PageSlidMenuVC: UIViewController {
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

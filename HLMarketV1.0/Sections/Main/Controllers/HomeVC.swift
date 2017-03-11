@@ -28,21 +28,9 @@ class HomeVC: BaseViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        loadURL()
-
-    }
-    
-    func loadURL() -> Void {
-        let request = URLRequest(url: URL(string: "http://192.168.15.106:8080/Simple_online/lx")!)
+        let request = URLRequest(url: URL(string: "http://192.168.15.53:8080/Simple_online/lx")!)
         webView.loadRequest(request)
-    }
-    
-    func fc(dataDic: Dictionary<String,String>) -> Void {
-        print(dataDic)
-    }
-    
-    func tejia(dataDic: Dictionary<String,String>) -> Void {
-        print(dataDic)
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -50,6 +38,23 @@ class HomeVC: BaseViewController, UIWebViewDelegate {
         }
 }
 
+// MARK: -- js响应函数
+extension HomeVC {
+    
+    func fc(dataDic: Dictionary<String,String>) -> Void {
+        
+        let vc = ClassifyVC()
+        vc.navigationItem.title = String.init(dataDic["typeName"]!)
+        vc.typeDic = dataDic
+        navigationController?.pushViewController(vc, animated: true)
+        
+    }
+    
+    func tejia(dataDic: Dictionary<String,String>) -> Void {
+        print(dataDic)
+    }
+    
+}
 
 // MARK: -- UIWebViewDelegate
 extension HomeVC {
@@ -91,7 +96,7 @@ extension HomeVC {
                 var dataDic = Dictionary<String,String>()
                 
                 for (index,item) in lastComponents.enumerated() {
-                    dataDic.updateValue(item, forKey: firstComponents[index+1])
+                    dataDic.updateValue(item.removingPercentEncoding!, forKey: firstComponents[index+1])
                 }
                 
                 if self.responds(to: sel!) {

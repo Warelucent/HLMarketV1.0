@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A451D6EF1E7397EB008BA775 /* RightCollectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451D6EE1E7397EB008BA775 /* RightCollectionViewModel.swift */; };
+		A451D6F51E73CFC5008BA775 /* GoodsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451D6F41E73CFC5008BA775 /* GoodsDetailViewController.swift */; };
+		A451D6F71E73D9E4008BA775 /* GoodsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451D6F61E73D9E4008BA775 /* GoodsModel.swift */; };
+		A451D6F91E73DA2D008BA775 /* GoodsTagModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451D6F81E73DA2D008BA775 /* GoodsTagModel.swift */; };
+		A451D6FB1E73DCE7008BA775 /* GoodsDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A451D6FA1E73DCE7008BA775 /* GoodsDetailTableViewCell.swift */; };
 		A48581F51E72700800738F0A /* AlamofireNetWork.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48581F41E72700800738F0A /* AlamofireNetWork.swift */; };
 		A48581F71E72786900738F0A /* HLP_AllExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48581F61E72786900738F0A /* HLP_AllExtension.swift */; };
 		A48581FA1E7278E400738F0A /* MBProgressManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48581F91E7278E400738F0A /* MBProgressManager.swift */; };
@@ -27,6 +32,19 @@
 		A48582251E728CB200738F0A /* AddNewAdressVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48582211E728CB200738F0A /* AddNewAdressVC.swift */; };
 		A48582261E728CB200738F0A /* AddressManageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48582221E728CB200738F0A /* AddressManageVC.swift */; };
 		A48582271E728CB200738F0A /* ANASetDefaultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48582231E728CB200738F0A /* ANASetDefaultCell.swift */; };
+		A485822C1E72A3BE00738F0A /* ClassifyLeftTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485822B1E72A3BE00738F0A /* ClassifyLeftTableView.swift */; };
+		A485822E1E72AD6300738F0A /* LeftTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485822D1E72AD6300738F0A /* LeftTableViewModel.swift */; };
+		A48582301E72ADDC00738F0A /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485822F1E72ADDC00738F0A /* BaseModel.swift */; };
+		A48582471E72AE6300738F0A /* MJExtensionConst.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582341E72AE6300738F0A /* MJExtensionConst.m */; };
+		A48582481E72AE6300738F0A /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582361E72AE6300738F0A /* MJFoundation.m */; };
+		A48582491E72AE6300738F0A /* MJProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582381E72AE6300738F0A /* MJProperty.m */; };
+		A485824A1E72AE6300738F0A /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = A485823A1E72AE6300738F0A /* MJPropertyKey.m */; };
+		A485824B1E72AE6300738F0A /* MJPropertyType.m in Sources */ = {isa = PBXBuildFile; fileRef = A485823C1E72AE6300738F0A /* MJPropertyType.m */; };
+		A485824C1E72AE6300738F0A /* NSObject+MJClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A485823E1E72AE6300738F0A /* NSObject+MJClass.m */; };
+		A485824D1E72AE6300738F0A /* NSObject+MJCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582401E72AE6300738F0A /* NSObject+MJCoding.m */; };
+		A485824E1E72AE6300738F0A /* NSObject+MJKeyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582421E72AE6300738F0A /* NSObject+MJKeyValue.m */; };
+		A485824F1E72AE6300738F0A /* NSObject+MJProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582441E72AE6300738F0A /* NSObject+MJProperty.m */; };
+		A48582501E72AE6300738F0A /* NSString+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = A48582461E72AE6300738F0A /* NSString+MJExtension.m */; };
 		C9034A831E70EE6E00752D64 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9034A821E70EE6E00752D64 /* ProfileHeaderView.swift */; };
 		C9034A851E70F78F00752D64 /* ProfileCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9034A841E70F78F00752D64 /* ProfileCollectionCell.swift */; };
 		C9034A891E711EEA00752D64 /* AccountManageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9034A881E711EEA00752D64 /* AccountManageVC.swift */; };
@@ -57,12 +75,15 @@
 		C950E5961E7005D9008F3F9E /* ClassifyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C950E5951E7005D9008F3F9E /* ClassifyVC.swift */; };
 		C9EE55881E7030990033671A /* UIImage-Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE55871E7030990033671A /* UIImage-Extension.swift */; };
 		C9EE558E1E7036BC0033671A /* ClassifyLeftTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9EE558D1E7036BC0033671A /* ClassifyLeftTableCell.swift */; };
-		F98577BE3957642705089D2A /* Pods_HLMarketV1_0.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9796AEAEC2A9047FE4331AEF /* Pods_HLMarketV1_0.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		89EA8467FA71758ED92EB37C /* Pods-HLMarketV1.0.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HLMarketV1.0.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HLMarketV1.0/Pods-HLMarketV1.0.debug.xcconfig"; sourceTree = "<group>"; };
-		9796AEAEC2A9047FE4331AEF /* Pods_HLMarketV1_0.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HLMarketV1_0.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A451D6EE1E7397EB008BA775 /* RightCollectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightCollectionViewModel.swift; sourceTree = "<group>"; };
+		A451D6F41E73CFC5008BA775 /* GoodsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodsDetailViewController.swift; sourceTree = "<group>"; };
+		A451D6F61E73D9E4008BA775 /* GoodsModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodsModel.swift; sourceTree = "<group>"; };
+		A451D6F81E73DA2D008BA775 /* GoodsTagModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodsTagModel.swift; sourceTree = "<group>"; };
+		A451D6FA1E73DCE7008BA775 /* GoodsDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodsDetailTableViewCell.swift; sourceTree = "<group>"; };
 		A48581F41E72700800738F0A /* AlamofireNetWork.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireNetWork.swift; sourceTree = "<group>"; };
 		A48581F61E72786900738F0A /* HLP_AllExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HLP_AllExtension.swift; sourceTree = "<group>"; };
 		A48581F91E7278E400738F0A /* MBProgressManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MBProgressManager.swift; sourceTree = "<group>"; };
@@ -84,6 +105,30 @@
 		A48582211E728CB200738F0A /* AddNewAdressVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddNewAdressVC.swift; sourceTree = "<group>"; };
 		A48582221E728CB200738F0A /* AddressManageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddressManageVC.swift; sourceTree = "<group>"; };
 		A48582231E728CB200738F0A /* ANASetDefaultCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ANASetDefaultCell.swift; sourceTree = "<group>"; };
+		A485822B1E72A3BE00738F0A /* ClassifyLeftTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClassifyLeftTableView.swift; sourceTree = "<group>"; };
+		A485822D1E72AD6300738F0A /* LeftTableViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftTableViewModel.swift; sourceTree = "<group>"; };
+		A485822F1E72ADDC00738F0A /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
+		A48582321E72AE6300738F0A /* MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJExtension.h; sourceTree = "<group>"; };
+		A48582331E72AE6300738F0A /* MJExtensionConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJExtensionConst.h; sourceTree = "<group>"; };
+		A48582341E72AE6300738F0A /* MJExtensionConst.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJExtensionConst.m; sourceTree = "<group>"; };
+		A48582351E72AE6300738F0A /* MJFoundation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJFoundation.h; sourceTree = "<group>"; };
+		A48582361E72AE6300738F0A /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
+		A48582371E72AE6300738F0A /* MJProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJProperty.h; sourceTree = "<group>"; };
+		A48582381E72AE6300738F0A /* MJProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJProperty.m; sourceTree = "<group>"; };
+		A48582391E72AE6300738F0A /* MJPropertyKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPropertyKey.h; sourceTree = "<group>"; };
+		A485823A1E72AE6300738F0A /* MJPropertyKey.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPropertyKey.m; sourceTree = "<group>"; };
+		A485823B1E72AE6300738F0A /* MJPropertyType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPropertyType.h; sourceTree = "<group>"; };
+		A485823C1E72AE6300738F0A /* MJPropertyType.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPropertyType.m; sourceTree = "<group>"; };
+		A485823D1E72AE6300738F0A /* NSObject+MJClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJClass.h"; sourceTree = "<group>"; };
+		A485823E1E72AE6300738F0A /* NSObject+MJClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MJClass.m"; sourceTree = "<group>"; };
+		A485823F1E72AE6300738F0A /* NSObject+MJCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJCoding.h"; sourceTree = "<group>"; };
+		A48582401E72AE6300738F0A /* NSObject+MJCoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MJCoding.m"; sourceTree = "<group>"; };
+		A48582411E72AE6300738F0A /* NSObject+MJKeyValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJKeyValue.h"; sourceTree = "<group>"; };
+		A48582421E72AE6300738F0A /* NSObject+MJKeyValue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MJKeyValue.m"; sourceTree = "<group>"; };
+		A48582431E72AE6300738F0A /* NSObject+MJProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJProperty.h"; sourceTree = "<group>"; };
+		A48582441E72AE6300738F0A /* NSObject+MJProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+MJProperty.m"; sourceTree = "<group>"; };
+		A48582451E72AE6300738F0A /* NSString+MJExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MJExtension.h"; sourceTree = "<group>"; };
+		A48582461E72AE6300738F0A /* NSString+MJExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MJExtension.m"; sourceTree = "<group>"; };
 		C9034A821E70EE6E00752D64 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		C9034A841E70F78F00752D64 /* ProfileCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileCollectionCell.swift; sourceTree = "<group>"; };
 		C9034A881E711EEA00752D64 /* AccountManageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManageVC.swift; sourceTree = "<group>"; };
@@ -124,7 +169,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F98577BE3957642705089D2A /* Pods_HLMarketV1_0.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,9 +187,43 @@
 		2A21B63822B2504E3645EA80 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9796AEAEC2A9047FE4331AEF /* Pods_HLMarketV1_0.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A451D6F01E73CDC1008BA775 /* GoodsDetail */ = {
+			isa = PBXGroup;
+			children = (
+				A451D6F21E73CE22008BA775 /* Controllers */,
+				A451D6F11E73CE22008BA775 /* Views */,
+				A451D6F31E73CE22008BA775 /* Models */,
+			);
+			path = GoodsDetail;
+			sourceTree = "<group>";
+		};
+		A451D6F11E73CE22008BA775 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A451D6FA1E73DCE7008BA775 /* GoodsDetailTableViewCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A451D6F21E73CE22008BA775 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				A451D6F41E73CFC5008BA775 /* GoodsDetailViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		A451D6F31E73CE22008BA775 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A451D6F61E73D9E4008BA775 /* GoodsModel.swift */,
+				A451D6F81E73DA2D008BA775 /* GoodsTagModel.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		A48581F81E7278E400738F0A /* MBProgressManager */ = {
@@ -195,6 +273,34 @@
 				A48582231E728CB200738F0A /* ANASetDefaultCell.swift */,
 			);
 			path = AddressManage;
+			sourceTree = "<group>";
+		};
+		A48582311E72AE6300738F0A /* MJExtension */ = {
+			isa = PBXGroup;
+			children = (
+				A48582321E72AE6300738F0A /* MJExtension.h */,
+				A48582331E72AE6300738F0A /* MJExtensionConst.h */,
+				A48582341E72AE6300738F0A /* MJExtensionConst.m */,
+				A48582351E72AE6300738F0A /* MJFoundation.h */,
+				A48582361E72AE6300738F0A /* MJFoundation.m */,
+				A48582371E72AE6300738F0A /* MJProperty.h */,
+				A48582381E72AE6300738F0A /* MJProperty.m */,
+				A48582391E72AE6300738F0A /* MJPropertyKey.h */,
+				A485823A1E72AE6300738F0A /* MJPropertyKey.m */,
+				A485823B1E72AE6300738F0A /* MJPropertyType.h */,
+				A485823C1E72AE6300738F0A /* MJPropertyType.m */,
+				A485823D1E72AE6300738F0A /* NSObject+MJClass.h */,
+				A485823E1E72AE6300738F0A /* NSObject+MJClass.m */,
+				A485823F1E72AE6300738F0A /* NSObject+MJCoding.h */,
+				A48582401E72AE6300738F0A /* NSObject+MJCoding.m */,
+				A48582411E72AE6300738F0A /* NSObject+MJKeyValue.h */,
+				A48582421E72AE6300738F0A /* NSObject+MJKeyValue.m */,
+				A48582431E72AE6300738F0A /* NSObject+MJProperty.h */,
+				A48582441E72AE6300738F0A /* NSObject+MJProperty.m */,
+				A48582451E72AE6300738F0A /* NSString+MJExtension.h */,
+				A48582461E72AE6300738F0A /* NSString+MJExtension.m */,
+			);
+			path = MJExtension;
 			sourceTree = "<group>";
 		};
 		C9034A861E711EC900752D64 /* Events */ = {
@@ -271,6 +377,7 @@
 		C950E54E1E6F9B99008F3F9E /* Sections */ = {
 			isa = PBXGroup;
 			children = (
+				A451D6F01E73CDC1008BA775 /* GoodsDetail */,
 				C950E55C1E6F9D70008F3F9E /* Classify */,
 				C950E5611E6F9D70008F3F9E /* Profile */,
 				C950E5661E6F9D70008F3F9E /* Search */,
@@ -329,6 +436,7 @@
 		C950E55A1E6F9B99008F3F9E /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				A48582311E72AE6300738F0A /* MJExtension */,
 				A48582041E728C2E00738F0A /* Resources */,
 				A485820B1E728C2E00738F0A /* UseAuthManager */,
 				A48581F81E7278E400738F0A /* MBProgressManager */,
@@ -362,6 +470,8 @@
 		C950E55E1E6F9D70008F3F9E /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A485822D1E72AD6300738F0A /* LeftTableViewModel.swift */,
+				A451D6EE1E7397EB008BA775 /* RightCollectionViewModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -376,6 +486,7 @@
 		C950E5601E6F9D70008F3F9E /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A485822B1E72A3BE00738F0A /* ClassifyLeftTableView.swift */,
 				C9EE558D1E7036BC0033671A /* ClassifyLeftTableCell.swift */,
 			);
 			path = Views;
@@ -533,6 +644,7 @@
 				C950E5771E6F9F15008F3F9E /* Constant.swift */,
 				C9034A901E71329600752D64 /* PageTitleView.swift */,
 				C9034A8D1E712BF000752D64 /* PageSlidMenuVC.swift */,
+				A485822F1E72ADDC00738F0A /* BaseModel.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -572,7 +684,7 @@
 				TargetAttributes = {
 					C950E5371E6F9966008F3F9E = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 6BDW27P2FH;
+						DevelopmentTeam = GGZV28TZ76;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
@@ -668,32 +780,45 @@
 				A48582111E728C2E00738F0A /* UIColorLmyExtension.swift in Sources */,
 				C950E5841E6FA1C7008F3F9E /* ShoppingCartVC.swift in Sources */,
 				C950E5741E6F9DD6008F3F9E /* UIBarButtonItem-Extension.swift in Sources */,
+				A451D6F51E73CFC5008BA775 /* GoodsDetailViewController.swift in Sources */,
 				C950E58A1E6FD401008F3F9E /* HomeHeaderView.swift in Sources */,
 				A485821C1E728C6000738F0A /* LoginViewController.swift in Sources */,
+				A48582501E72AE6300738F0A /* NSString+MJExtension.m in Sources */,
 				A48582241E728CB200738F0A /* AddNewAdressInfoCell.swift in Sources */,
+				A451D6F71E73D9E4008BA775 /* GoodsModel.swift in Sources */,
+				A485822E1E72AD6300738F0A /* LeftTableViewModel.swift in Sources */,
 				C950E57C1E6FA090008F3F9E /* NavigationController.swift in Sources */,
 				C9034A831E70EE6E00752D64 /* ProfileHeaderView.swift in Sources */,
 				A48582101E728C2E00738F0A /* LmyPicker.swift in Sources */,
+				A451D6FB1E73DCE7008BA775 /* GoodsDetailTableViewCell.swift in Sources */,
 				C950E5761E6F9EBB008F3F9E /* UIColor-Extension.swift in Sources */,
 				C9034A921E71329600752D64 /* PageTitleView.swift in Sources */,
 				A48582161E728C4800738F0A /* ShopCartStyleModel.swift in Sources */,
+				A485824B1E72AE6300738F0A /* MJPropertyType.m in Sources */,
+				A485824C1E72AE6300738F0A /* NSObject+MJClass.m in Sources */,
 				A485821E1E728C6000738F0A /* RegisterViewController.swift in Sources */,
 				C9034A8C1E7129BB00752D64 /* CouponVC.swift in Sources */,
 				C9034A891E711EEA00752D64 /* AccountManageVC.swift in Sources */,
 				A485821D1E728C6000738F0A /* NextRegisterVC.swift in Sources */,
+				A48582301E72ADDC00738F0A /* BaseModel.swift in Sources */,
 				C950E5821E6FA1B4008F3F9E /* SearchVC.swift in Sources */,
 				C950E5901E6FD74B008F3F9E /* CellCycleModel.swift in Sources */,
 				C950E5961E7005D9008F3F9E /* ClassifyVC.swift in Sources */,
+				A485824F1E72AE6300738F0A /* NSObject+MJProperty.m in Sources */,
 				A48582261E728CB200738F0A /* AddressManageVC.swift in Sources */,
 				C9EE558E1E7036BC0033671A /* ClassifyLeftTableCell.swift in Sources */,
+				A48582491E72AE6300738F0A /* MJProperty.m in Sources */,
+				A485822C1E72A3BE00738F0A /* ClassifyLeftTableView.swift in Sources */,
 				A48581FA1E7278E400738F0A /* MBProgressManager.swift in Sources */,
 				A48581F51E72700800738F0A /* AlamofireNetWork.swift in Sources */,
 				A48582121E728C2E00738F0A /* UIViewLmyExtension.swift in Sources */,
+				A451D6F91E73DA2D008BA775 /* GoodsTagModel.swift in Sources */,
 				C950E53C1E6F9966008F3F9E /* AppDelegate.swift in Sources */,
 				A485820F1E728C2E00738F0A /* DateLmyExtension.swift in Sources */,
 				C950E5801E6FA1A0008F3F9E /* ProfileVC.swift in Sources */,
 				C950E57A1E6FA00F008F3F9E /* TabBarController.swift in Sources */,
 				C950E57E1E6FA0CD008F3F9E /* BaseViewController.swift in Sources */,
+				A451D6EF1E7397EB008BA775 /* RightCollectionViewModel.swift in Sources */,
 				A48581F71E72786900738F0A /* HLP_AllExtension.swift in Sources */,
 				C9034A8E1E712BF000752D64 /* PageSlidMenuVC.swift in Sources */,
 				A48582181E728C5100738F0A /* ShopCartStyleCell.swift in Sources */,
@@ -701,11 +826,16 @@
 				A48582141E728C2E00738F0A /* UserAuthModel.swift in Sources */,
 				C9EE55881E7030990033671A /* UIImage-Extension.swift in Sources */,
 				C950E5861E6FA203008F3F9E /* HomeVC.swift in Sources */,
+				A485824A1E72AE6300738F0A /* MJPropertyKey.m in Sources */,
 				C950E5941E6FF6EC008F3F9E /* UINavgationBar-Extension.swift in Sources */,
+				A48582471E72AE6300738F0A /* MJExtensionConst.m in Sources */,
 				C950E58C1E6FD43C008F3F9E /* HomeCategoryCell.swift in Sources */,
 				C93A8DEB1E70626A00F3C8E9 /* ProfileInfoLabelCell.swift in Sources */,
+				A48582481E72AE6300738F0A /* MJFoundation.m in Sources */,
+				A485824E1E72AE6300738F0A /* NSObject+MJKeyValue.m in Sources */,
 				C950E5781E6F9F15008F3F9E /* Constant.swift in Sources */,
 				A48582251E728CB200738F0A /* AddNewAdressVC.swift in Sources */,
+				A485824D1E72AE6300738F0A /* NSObject+MJCoding.m in Sources */,
 				A48582131E728C2E00738F0A /* UserAuthManager.swift in Sources */,
 				C9034A851E70F78F00752D64 /* ProfileCollectionCell.swift in Sources */,
 				A48582271E728CB200738F0A /* ANASetDefaultCell.swift in Sources */,
@@ -831,10 +961,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 6BDW27P2FH;
+				DEVELOPMENT_TEAM = GGZV28TZ76;
 				INFOPLIST_FILE = HLMarketV1.0/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "hlyf.HLMarketV1-0";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.prs.HLMarketV1-0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "HLMarketV1.0/HLMarketV1.0-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -848,10 +978,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				DEVELOPMENT_TEAM = 6BDW27P2FH;
+				DEVELOPMENT_TEAM = GGZV28TZ76;
 				INFOPLIST_FILE = HLMarketV1.0/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "hlyf.HLMarketV1-0";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.prs.HLMarketV1-0";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "HLMarketV1.0/HLMarketV1.0-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;

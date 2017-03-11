@@ -8,19 +8,14 @@
 
 import UIKit
 
-class ShopCartStyleModel: NSObject {
+class ShopCartStyleModel: BaseModel {
 
-    var goodsAvtarView:String = ""
-    var goodsTitle:String = ""
-    var goodsPrice:String = ""
-    
-    init(dict:[String:Any]) {
-        super.init()
-        setValuesForKeys(dict)
-    }
-    
-    override func setValue(_ value: Any?, forUndefinedKey key: String) {
-        
-    }
+    var cGoodsNo = ""
+    var bFresh = ""
+    var cGoodsImagePath = ""
+    var fVipPrice = ""
+    var cGoodsName = ""
+    var fNormalPrice = ""
+    var RowNumber = ""
     
 }

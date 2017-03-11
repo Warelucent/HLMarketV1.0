@@ -17,7 +17,7 @@ let NotifyUpdateCategory = NSNotification.Name(rawValue:"notifyUpdateCategory")
 let KSelectedChannel: String = "selectedChannel"
 
 /// 常用属性
-let DefaultURL = "http://192.168.15.106:8080"
+let DefaultURL = "http://192.168.15.53:8080"
 let kItemMargin : CGFloat = 10
 let kHeaderViewH : CGFloat = 50
 let kNormalItemW = (kScreenW - 5 * kItemMargin) / 4

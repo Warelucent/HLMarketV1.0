@@ -37,8 +37,9 @@ class NavigationController: UINavigationController {
     func setBackBarButtonItem() -> UIBarButtonItem {
         
         let backButton = UIButton.init(type: .custom)
-        backButton.setImage(UIImage(named: "setting_back"), for: .normal)
+        backButton.setImage(UIImage(named: "hlm_back_icon"), for: .normal)
         backButton.sizeToFit()
+        backButton.frame.size = CGSize(width: 15, height: 15)
         backButton.contentEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 0)
         backButton.addTarget(self, action: #selector(NavigationController.backClick), for: .touchUpInside)
         return UIBarButtonItem.init(customView: backButton)

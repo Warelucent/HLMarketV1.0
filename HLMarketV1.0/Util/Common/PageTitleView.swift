@@ -130,5 +130,12 @@ extension PageTitleView {
         //
         currentLabelIndex = targetIndex
     }
+    
+    func setLabelUserInterface(state: Bool) -> Void {
+        for i in 0..<titles.count {
+            let label = viewWithTag(i)
+            label?.isUserInteractionEnabled = state
+        }
+    }
 }
 
