@@ -15,17 +15,17 @@ private let kClassRightCollectionViewCellMargin:CGFloat = 8
 
 class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDataSource {
     
-    var typeDic: Dictionary<String,String>?
+    var typeModel: ClassifyTypeModel?
     
     fileprivate lazy var leftTableView: ClassifyLeftTableView = {
         let rect = CGRect(x: 0, y: 0, width: kScreenW * (1 - 0.75), height: kScreenH - kTabBarH)
         let leftTableView = ClassifyLeftTableView(frame: rect)
         leftTableView.titleBlock = { [weak self] data in
-            let model = data as! LeftTableViewModel
+            let model = data as! ClassifyTypeModel
             return model.cGroupTypeName
         }
         leftTableView.selectBlock = { [weak self] data in
-            self!.selectLeftTableView(model: data as! LeftTableViewModel)
+            self!.selectLeftTableView(model: data as! ClassifyTypeModel)
         }
         return leftTableView
     }()
@@ -51,11 +51,11 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
         return colView
     }()
     
-    fileprivate var leftArr = Array<LeftTableViewModel>()
+    fileprivate var leftArr = Array<ClassifyTypeModel>()
     
-    fileprivate var rightArr = Array<RightCollectionViewModel>()
+    fileprivate var rightArr = Array<ShopCartStyleModel>()
     
-    fileprivate var currentLeftModel: LeftTableViewModel?
+    fileprivate var currentLeftModel: ClassifyTypeModel?
     
     fileprivate var currentPage = 1
     
@@ -71,16 +71,14 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
     // MARK: -- 获取左侧栏数据
     func getLeftArrData() -> Void {
         
-        if self.typeDic == nil {
+        if self.typeModel == nil {
             showHint(in: view, hint: "类型为空")
             return
         }
         
-        let parameters = ["cParentNo":"\(self.typeDic!["typeNo"]!)"]
+        let parameters = ["cParentNo":"\(self.typeModel!.cGroupTypeNo)"]
         
         AlamofireNetWork.required(urlString: "/Simple_online/Select_left_Group", method: .post, parameters: parameters, success: { (result) in
-            
-//            print(result)
             
             let json = JSON(result)
             
@@ -88,7 +86,7 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
                 
                 let data = json["dDate"].arrayObject
                 
-                self.leftArr = LeftTableViewModel.mj_objectArray(withKeyValuesArray: data) as! Array<LeftTableViewModel>
+                self.leftArr = ClassifyTypeModel.mj_objectArray(withKeyValuesArray: data).copy() as! Array<ClassifyTypeModel>
                 
                 self.leftTableView.reloadData(arr: self.leftArr)
                 
@@ -102,7 +100,7 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
         
     }
     // MARK: -- 左边栏点击事件
-    func selectLeftTableView(model: LeftTableViewModel) -> Void {
+    func selectLeftTableView(model: ClassifyTypeModel) -> Void {
         
         self.isLoad = false
         
@@ -124,15 +122,13 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
         
         AlamofireNetWork.required(urlString: "/Simple_online/Select_right_goods", method: .post, parameters: parameters, success: { (result) in
             
-//            print(result)
-            
             let json = JSON(result)
             
             if json["resultStatus"] == "1" {
                 
                 let data = json["dDate"].arrayObject
                 
-                let modelArr = RightCollectionViewModel.mj_objectArray(withKeyValuesArray: data) as! Array<RightCollectionViewModel>
+                let modelArr = ShopCartStyleModel.mj_objectArray(withKeyValuesArray: data).copy() as! Array<ShopCartStyleModel>
                 
                 self.rightArr = self.rightArr + modelArr
                 
@@ -140,9 +136,12 @@ class ClassifyVC: BaseViewController,UICollectionViewDelegate,UICollectionViewDa
                 self.isLoad = true
                 
             }else {
-//                self.showHint(in: self.view, hint: "类别为空")
-                self.isLoad = false
-                self.currentPage -= 1
+                if self.currentPage == 1 {
+                    self.showHint(in: self.view, hint: "数据为空")
+                }else{
+                    self.isLoad = false
+                    self.currentPage -= 1
+                }
             }
             
         }) { (error) in
@@ -176,17 +175,26 @@ extension ClassifyVC {
         //cell.layer.shadowOffset = CGSize(width:1, height:1)
         
         let model = rightArr[indexPath.row]
-        model.cGoodsImage = "hlm_test_pic.jpg"
-        cell.rightCollectionViewModel = model
+        model.cGoodsImagePath = "hlm_test_pic.jpg"
+        cell.shopCartModel = model
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let model = rightArr[indexPath.row]
+        
+        let vc = GoodsDetailViewController()
+        vc.cGoodsNo = model.cGoodsNo
+        vc.price = model.fNormalPrice
+        vc.vipPrice = model.fVipPrice
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if  rightCollectionView.cellForItem(at: IndexPath(row: rightArr.count - 3, section: 0)) != nil && self.isLoad {
-
-            //当滚动到精猜生活headerview的时候去请求 精彩生活的网络数据
             self.isLoad = false
             currentPage += 1
             getRightArrData(cGroupTypeNo: currentLeftModel!.cGroupTypeNo, pages: currentPage)

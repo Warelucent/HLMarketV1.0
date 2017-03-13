@@ -53,7 +53,7 @@ class GoodsDetailViewController: BaseViewController {
         let imageArr = ["hlm_service","hlm_shop","hlm_collect"]
         
         for i in 0..<3 {
-            let btn = UIButton(frame: CGRect(x: 44*i, y: 0, width: 44, height: 60))
+            let btn = HLTopBtn(frame: CGRect(x: 44*i, y: 0, width: 44, height: 60))
             btn.setTitle(nameArr[i], for: .normal)
             btn.setImage(UIImage.init(named: imageArr[i]), for: UIControlState.normal)
             btn.titleLabel?.font = UIFont.systemFont(ofSize: 14)
@@ -61,8 +61,8 @@ class GoodsDetailViewController: BaseViewController {
             btn.tag = i+1
             btn.addTarget(self, action: #selector(btnAction(btn:)), for: .touchUpInside)
             btn.contentHorizontalAlignment = .center
-            btn.titleEdgeInsets = UIEdgeInsetsMake(btn.imageView!.frame.size.height, -btn.imageView!.frame.size.width, 0, 0)
-            btn.imageEdgeInsets = UIEdgeInsetsMake(-btn.titleLabel!.bounds.size.width-5, btn.titleLabel!.bounds.size.width/2, 0, 0)
+//            btn.titleEdgeInsets = UIEdgeInsetsMake(btn.imageView!.frame.size.height, -btn.imageView!.frame.size.width, 0, 0)
+//            btn.imageEdgeInsets = UIEdgeInsetsMake(-btn.titleLabel!.bounds.size.width-5, btn.titleLabel!.bounds.size.width/2, 0, 0)
             view.addSubview(btn)
         }
         
@@ -230,7 +230,7 @@ extension GoodsDetailViewController:UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         let footerView = UIView.init()
-        footerView.backgroundColor = UIColor.init(gray: 210)
+        footerView.backgroundColor = UIColor.gray.withAlphaComponent(0.2)
         return footerView
     }
     

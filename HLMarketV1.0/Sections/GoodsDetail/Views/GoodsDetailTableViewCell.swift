@@ -40,8 +40,14 @@ class GoodsDetailTableViewCell: UITableViewCell {
     
     lazy var priceLabel = {() -> UILabel in
         let label = UILabel.init()
-        label.font = UIFont.systemFont(ofSize: 17)
+        label.font = UIFont.systemFont(ofSize: 20)
         label.textColor = UIColor.red
+        return label
+    }()
+    
+    lazy var price1Label = {() -> GrayLineLabel in
+        let label = GrayLineLabel()
+        label.font = UIFont.systemFont(ofSize: 14)
         return label
     }()
     
@@ -98,7 +104,16 @@ class GoodsDetailTableViewCell: UITableViewCell {
             if (goodsDetailModel != nil) {
                 goodsImageView.image = UIImage.init(named: (goodsDetailModel?.cGoodsImagePath)!)
                 nameLabel.text  = goodsDetailModel?.cGoodsName
-                priceLabel.text = "￥" + String.init(format: "%.2f", Float((goodsDetailModel?.fVipPrice)!)!)
+                if (goodsDetailModel?.fVipPrice) != ""{
+                    let priceLabelStr = "￥" + String.init(format: "%.2f", Float(goodsDetailModel!.fVipPrice)!)
+                    let price1LabelStr = "原价:" + String.init(format: "%.2f", Float(goodsDetailModel!.fNormalPrice)!)
+                    priceLabel.text = priceLabelStr
+                    price1Label.frame = CGRect(x: priceLabel.frame.origin.x + CGFloat(priceLabelStr.characters.count+1)*10+10, y: priceLabel.frame.origin.y+3, width: CGFloat(price1LabelStr.characters.count+3)*7+1, height: priceLabel.frame.size.height)
+                    topBoxView.addSubview(price1Label)
+                    price1Label.price = price1LabelStr
+                }else {
+                    priceLabel.text = "￥" + String.init(format: "%.2f", Float(goodsDetailModel!.fNormalPrice)!)
+                }
                 salesLabel.text = "销量: 300件"
                 stockLabel.text = "库存: 88件"
             }
@@ -246,4 +261,24 @@ class GoodsDetailTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+}
+
+class GrayLineLabel: UILabel {
+    
+    fileprivate lazy var lineView: UIView = {
+        let lineView = UIView()
+        lineView.backgroundColor = UIColor.lightGray
+        return lineView
+    }()
+    
+    var price:String? {
+        didSet{
+            self.text = price
+            self.textColor = UIColor.lightGray
+            self.textAlignment = .center
+            lineView.frame = CGRect(x: 0, y: frame.size.height/2+1, width: frame.size.width, height: 1)
+            self.addSubview(lineView)
+        }
+    }
+    
 }

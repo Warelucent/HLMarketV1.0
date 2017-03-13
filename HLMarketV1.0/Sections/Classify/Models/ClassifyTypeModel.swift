@@ -1,5 +1,5 @@
 //
-//  LeftTableViewModel.swift
+//  ClassifyTypeModel.swift
 //  HLMarketV1.0
 //
 //  Created by 彭仁帅 on 2017/3/10.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LeftTableViewModel: BaseModel {
+class ClassifyTypeModel: BaseModel {
 
     var bFresh = ""
     var cGroupTypeName = ""

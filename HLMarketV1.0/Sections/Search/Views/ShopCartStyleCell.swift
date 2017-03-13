@@ -43,7 +43,8 @@ class ShopCartStyleCell: UICollectionViewCell {
     
     lazy var priceLabel = {() -> UILabel in
         let label = UILabel.init()
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor.red
         return label
     }()
     
@@ -59,22 +60,31 @@ class ShopCartStyleCell: UICollectionViewCell {
             if (shopCartModel != nil) {
                 imageView.image = UIImage.init(named: (shopCartModel?.cGoodsImagePath)!)
                 nameLabel.text  = shopCartModel?.cGoodsName
-                priceLabel.text = "￥" + String.init(format: "%.2f", Float(shopCartModel!.fVipPrice)!)
+                
+                if (shopCartModel?.fVipPrice) != ""{
+                    priceLabel.text = "￥" + String.init(format: "%.2f", Float(shopCartModel!.fVipPrice)!)
+                }else {
+                    priceLabel.text = "￥" + String.init(format: "%.2f", Float(shopCartModel!.fNormalPrice)!)
+                }
+                
             }
         }
     }
     
-    var rightCollectionViewModel:RightCollectionViewModel? {
+    var vADModel:VADModel? {
         didSet {
-            if (rightCollectionViewModel != nil) {
-                imageView.image = UIImage.init(named: (rightCollectionViewModel?.cGoodsImage)!)
-                nameLabel.text  = rightCollectionViewModel?.cGoodsName
-                priceLabel.text = "￥" + String.init(format: "%.2f", Float(rightCollectionViewModel!.fNormalPrice)!)
+            if (vADModel != nil) {
+                imageView.image = UIImage.init(named: (vADModel?.cGoodsImagePath)!)
+                nameLabel.text  = vADModel?.cGoodsName
+                
+                if (vADModel?.Recommend_price) != ""{
+                    priceLabel.text = "￥" + String.init(format: "%.2f", Float(vADModel!.Recommend_price)!)
+                }else {
+                    priceLabel.text = "￥" + String.init(format: "%.2f", Float(vADModel!.fNormalPrice)!)
+                }
             }
         }
     }
-    
-    
     
     override func layoutSubviews() {
         imageBoxView.snp.makeConstraints { (make) in
@@ -154,6 +164,7 @@ class ShopCartStyleCell: UICollectionViewCell {
         self.topBoxView.addSubview(sepLineLabel)
         
         self.botBoxView.addSubview(priceLabel)
+//        self.botBoxView.addSubview(price1Label)
         self.botBoxView.addSubview(shopcartBtn)
         
         

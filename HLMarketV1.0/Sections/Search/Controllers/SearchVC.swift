@@ -21,14 +21,21 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
         let tableView = UITableView.init(frame: (self?.view.bounds)!, style: UITableViewStyle.plain)
         
         tableView.showsVerticalScrollIndicator = false
+        tableView.isScrollEnabled = false
         tableView.backgroundColor = UIColor.white
         tableView.separatorStyle = UITableViewCellSeparatorStyle.none
         
         tableView.dataSource = self
         tableView.delegate   = self
         
-        
         return tableView
+    }()
+    
+    fileprivate var historyView: SearchHistoryView = {
+        let view = SearchHistoryView(frame: CGRect(x: -kScreenW, y: 40, width: kScreenW, height: kScreenH-40-64))
+        view.backgroundColor = UIColor.white
+        view.alpha = 0.0
+        return view
     }()
     
     fileprivate var keywordTextField = UITextField()
@@ -52,6 +59,15 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
         tableView.backgroundColor = UIColor.white
         
         self.view.addSubview(tableView)
+        self.view.addSubview(historyView)
+        
+        historyView.selectBlock = { [weak self] searchStr in
+            if searchStr != "" {
+                self?.searchBtnAction1(str:searchStr)
+            }else{
+                self?.keywordTextField.resignFirstResponder()
+            }
+        }
         
         getSearchDate(type: currentType, fage: "0", pages: currentPage)
         
@@ -72,7 +88,7 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
                 
                 let data = json["dDate"].arrayObject
                 
-                let modelArr = ShopCartStyleModel.mj_objectArray(withKeyValuesArray: data) as! Array<ShopCartStyleModel>
+                let modelArr = ShopCartStyleModel.mj_objectArray(withKeyValuesArray: data).copy() as! Array<ShopCartStyleModel>
                 
                 self.dataArr = self.dataArr + modelArr
                 
@@ -81,9 +97,14 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
                 self.isLoad = true
                 
             }else {
-//                self.showHint(in: self.view, hint: "类别为空")
-                self.isLoad = false
-                self.currentPage -= 1
+                
+                if self.currentPage == 1 {
+                    self.showHint(in: self.view, hint: "数据为空")
+                }else{
+                    self.isLoad = false
+                    self.currentPage -= 1
+                }
+                
             }
             
         }) { (error) in
@@ -151,6 +172,8 @@ extension SearchVC:UITableViewDelegate, UITableViewDataSource {
         keywordTextField.layer.borderWidth = 1
         keywordTextField.layer.cornerRadius = 5
         keywordTextField.layer.masksToBounds = true
+        keywordTextField.delegate = self
+        keywordTextField.clearButtonMode = .whileEditing
         
         
         
@@ -181,26 +204,48 @@ extension SearchVC:UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-extension SearchVC {
+extension SearchVC: UITextFieldDelegate {
     // MARK: -- 搜索响应事件
     func searchBtnAction() -> Void {
+        
+        keywordTextField.resignFirstResponder()
         
         if keywordTextField.text?.characters.count == 0 {
             showHint(in: view, hint: "请输入要搜索的内容")
             return
         }
         
-        isLoad = false
+        saveSearchData(str: keywordTextField.text!)
         
-        dataArr = []
+        let vc = SearchVC1()
+        vc.searchStr = keywordTextField.text!
+        vc.navigationItem.title = "相关搜索"
+        navigationController?.pushViewController(vc, animated: true)
         
-        colView?.reloadData()
+        keywordTextField.text = ""
+       
+    }
+    // MARK: -- 点击历史记录搜索
+    func searchBtnAction1(str: String) -> Void {
         
-        currentPage = 1
+        keywordTextField.text = ""
+        keywordTextField.resignFirstResponder()
         
-        currentType = 4
+        let vc = SearchVC1()
+        vc.searchStr = str
+        vc.navigationItem.title = "相关搜索"
+        navigationController?.pushViewController(vc, animated: true)
         
-        getSearchDate(type: currentType, fage: keywordTextField.text!, pages: currentPage)
+    }
+    // MARK: -- 保存搜索历史
+    func saveSearchData(str: String) -> Void {
+        
+        let rect = str.boundingRect(with: CGSize.init(width: 0, height: Int.max), options: .usesLineFragmentOrigin, attributes: [NSFontAttributeName:font(14)], context: nil)
+        var width = rect.size.width + 10
+        width = width < WID*3 ? WID*3 : width
+        width = width > WID*8 ? WID*8 : width
+        
+        FMDBManager.share().executeDBSQLArr(["delete from \(SearchHistoryDBName) where name = '\(str)'","insert into \(SearchHistoryDBName) (name,width,saveTime) values('\(str)','\(width)','\(getDate())')"])
     }
     // MARK: -- PageTitleViewDelegate
     func pageTitleView(_ titleView : PageTitleView, selectedIndex index : Int) {
@@ -217,9 +262,28 @@ extension SearchVC {
         
         getSearchDate(type: currentType, fage: "0", pages: currentPage)
     }
+    // MARK: -- UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
+        
+        if keywordTextField.text?.characters.count != 0 {
+            searchBtnAction()
+        }
+        
+        return true
+    }
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        historyView.show()
+        return true
+    }
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        historyView.hid()
+    }
+    
 }
 
-//?: 为什么延展里不能遵守layout协议
+// MARK: -- UICollectionViewDelegate, UICollectionViewDataSource
 extension SearchVC:UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataArr.count
@@ -257,7 +321,6 @@ extension SearchVC:UICollectionViewDelegate, UICollectionViewDataSource {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if  colView?.cellForItem(at: IndexPath(row: dataArr.count - 3, section: 0)) != nil && self.isLoad {
-            //当滚动到精猜生活headerview的时候去请求 精彩生活的网络数据
             self.isLoad = false
             currentPage += 1
             getSearchDate(type: currentType, fage: "0", pages: currentPage)
