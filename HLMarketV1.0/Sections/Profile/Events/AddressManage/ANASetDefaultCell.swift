@@ -63,6 +63,13 @@ class ANASetDefaultCell: UITableViewCell {
             make.left.equalTo(checkBtn.snp.right).offset(5)
         }
     }
+    override var frame:CGRect{
+        didSet {
+            var newFrame = frame
+            newFrame.size.height -= 1
+            super.frame = newFrame
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

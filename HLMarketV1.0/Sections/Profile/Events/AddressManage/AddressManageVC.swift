@@ -7,23 +7,49 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 private let kProfileAdressManageCellID = "kProfileAdressManageCellID"
 
 class AddressManageVC: UITableViewController {
 
+    var userAddressModels:[AddressUserModel]? = []
+    var selectedIndex:Int = 0
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(imageName: "hlm_back_icon", highLightImage: "", size: CGSize(width:20, height:20), target: self, action: #selector(AddressManageVC.backAction))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(imageName: "hlm_add_new_address", highLightImage: "", size: CGSize(width:30, height:30), target: self, action: #selector(AddressManageVC.addAddressAction))
         self.navigationItem.title = "管理收货地址"
         
-        tableView.backgroundColor = UIColor.init(gray: 252)
-        tableView.separatorStyle  = UITableViewCellSeparatorStyle.singleLine
+        tableView.backgroundColor = UIColor.init(gray: 232)
+        tableView.separatorStyle  = UITableViewCellSeparatorStyle.none
         
         
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: kProfileAdressManageCellID)
         
+        tableView.register(AddressManageViewCell.self, forCellReuseIdentifier: kProfileAdressManageCellID)
+        
+        
+        if let userNo = UserAuthManager.sharedManager.getUserModel()?.UserNo {
+            AlamofireNetWork.required(urlString: "/Simple_online/Select_User_Address", method: .post, parameters: ["UserNo":userNo], success: { (results) in
+                let json = JSON(results)
+                print(json)
+                if json["resultStatus"] == "1" {
+                    let dictArray = json["dDate"].arrayObject
+                    for aDict in dictArray! {
+                        let aDict:[String:Any] = aDict as! [String : Any]
+                        let model = AddressUserModel.init(dict: aDict)
+                        self.userAddressModels?.append(model)
+                    }
+                    DispatchQueue.main.async(execute: {
+                        self.tableView.reloadData()
+                    })
+                }
+            }) { (error) in
+                print(error)
+            }
+        }
     }
     
     //MARK: 新增收货地址
@@ -46,17 +72,77 @@ class AddressManageVC: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 10
+        if self.userAddressModels == nil {
+            return 0
+        }
+        return (self.userAddressModels?.count)!
     }
 
+    var btnsManager:[(index:Int, model:AddressUserModel, isChoosed:Bool)]{
+        get {
+            var manager:[(Int, AddressUserModel, Bool)] = []
+            for (index, item) in (userAddressModels?.enumerated())! {
+                let item = item
+                manager.append((index, item, false))
+            }
+             return manager
+        }
+    }
+    
+    
+    func manageBtnState(defaultID:Int) {
+        
+    }
+    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: indexPath)
-
-
+        let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: indexPath) as! AddressManageViewCell
+        cell.addressUserModel = userAddressModels?[indexPath.row]
+        cell.cellID = indexPath.row
+        
+        if indexPath.row == selectedIndex {
+            cell.isChoosed = true
+        } else {
+            cell.isChoosed = false
+        }
+        
+        cell.clickDefaultBtnClosure = {(cellId:Int, sender:UIButton) in
+            
+            print("你点击了位置在:\(cellId)的btn")
+            self.selectedIndex = cellId
+            /*
+            for i in 0..<self.userAddressModels!.count {
+                let theIndexPath = IndexPath.init(row: i, section: indexPath.section)
+                let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: theIndexPath) as! AddressManageViewCell
+                cell.addressUserModel = self.userAddressModels?[indexPath.row]
+                cell.cellID = indexPath.row
+                if i == cellId {
+                    cell.isChoosed = true
+                } else {
+                    cell.isChoosed = false
+                }
+            }
+            self.tableView.reloadData()
+            */
+        }
         return cell
     }
     
+    override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: indexPath) as! AddressManageViewCell
+        if let state = cell.isChoosed {
+            print("\(indexPath.row)---------\(state)")
+        }
+    }
+
+    
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 150
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
 
     /*
     // Override to support conditional editing of the table view.

@@ -11,6 +11,8 @@ import UIKit
 /// 归档路径
 let path = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.documentDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0] as NSString
 
+//使用userDefault进行轻量级的本地数据的读取/删除操作
+let userDefault = UserDefaults.standard
 
 /// notification
 let NotifyUpdateCategory = NSNotification.Name(rawValue:"notifyUpdateCategory")

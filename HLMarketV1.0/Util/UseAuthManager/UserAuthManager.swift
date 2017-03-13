@@ -28,22 +28,29 @@ class UserAuthManager: NSObject {
     
 //保存用户信息
     func saveUserInfo(userModel:UserAuthModel) {
-        
+        let modelData = NSKeyedArchiver.archivedData(withRootObject: userModel)
+        userDefault.set(modelData, forKey: "hlUserModel")
     }
     
-    
-    
+
 //获取用户信息
     
     func getUserModel() -> UserAuthModel? {
-        let model = UserAuthModel.init(dict: [:])
-        return model
+        let modelData = userDefault.data(forKey: "hlUserModel")
+        if modelData == nil {
+            return nil
+        }
+        if  (NSKeyedUnarchiver.unarchiveObject(with: modelData!) != nil)  {
+            return NSKeyedUnarchiver.unarchiveObject(with: modelData!) as! UserAuthModel?
+        }
+        return nil
     }
     
     
 //清除用户信息
     func cleanUserInfo() {
-        
+        userDefault.removeObject(forKey: "hlUserModel")
+        userDefault.synchronize()
     }
     
 }

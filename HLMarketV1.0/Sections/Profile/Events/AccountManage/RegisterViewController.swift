@@ -8,10 +8,13 @@
 
 import UIKit
 
+
+
 class RegisterViewController: BaseViewController {
     
     
     lazy var topBoxView = {UIView.init()}()
+    var verCode:String? = nil
     
     lazy var phoneTF = {() -> UITextField in
         let textfield = UITextField.init()
@@ -35,7 +38,7 @@ class RegisterViewController: BaseViewController {
         return textfield
     }()
     
-    
+    // --- Q: 如何获取点击获取验证码的按钮, 让每次发送之后, 按钮禁用60s
     lazy var verCodeTF = {() -> UITextField in
         let textfield = UITextField.init()
         let rect = CGRect(x: 0, y: 0, width: 60, height: 20)
@@ -56,6 +59,9 @@ class RegisterViewController: BaseViewController {
         getCodeBtn.setTitle("获取验证码", for: UIControlState.normal)
         getCodeBtn.setTitleColor(UIColor.init(gray:168), for: UIControlState.normal)
         getCodeBtn.titleLabel?.font = UIFont.systemFont(ofSize: 12)
+        
+        //点击按钮获取验证码
+        getCodeBtn.addTarget(self, action: #selector(RegisterViewController.getCodeAction), for: UIControlEvents.touchUpInside)
         
         getCodeBtn.frame = CGRect(x: 0, y: 0, width: 118, height: 20)
         //布局 ----- snp
@@ -98,7 +104,33 @@ class RegisterViewController: BaseViewController {
     }()
     
     
-    
+    func getCodeAction() {
+        do {
+            let pattern = "^1[0-9]{10}$"
+            let validateString = phoneTF.text!
+            
+            let regex: NSRegularExpression = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
+            let matches = regex.matches(in: validateString, options: NSRegularExpression.MatchingOptions.reportProgress, range: NSMakeRange(0, validateString.characters.count))
+            if matches.count > 0 {
+                //进行网络请求, 发送验证码
+                
+                AlamofireNetWork.required(urlString: "/Simple_online/Get_TelPhone_Code", method: .post, parameters: ["Tel": validateString, "reg_or_update":"0"], success: { [weak self] (results) in
+                    if results["resultStatus"] as! String == "000000" {
+                        self?.showHint(in: (self?.view)!, hint: "验证码已发送, 请注意查收")
+                        self?.verCode = results["dDate"] as! String?
+                    }
+                }, failure: { (error) in
+                    print(error)
+                })
+                
+            } else {
+                showHint(in: view, hint: "请输入正确的手机号")
+            }
+        }
+        catch {
+            
+        }
+    }
     
     
     
@@ -108,16 +140,22 @@ class RegisterViewController: BaseViewController {
         
         self.navigationItem.title = "注册"
         self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(imageName: "hlm_back_icon", highLightImage: "", size: CGSize(width:15, height:15), target: self, action: #selector(RegisterViewController.backAction))
-        
-        
-        
         self.setupUI()
         self.layoutUI()
     }
     
     func nextRegisterAction() {
-        let nextRegisterVC = NextRegisterVC()
-        self.navigationController?.pushViewController(nextRegisterVC, animated: true)
+        let text = verCodeTF.text
+        if text! == self.verCode {
+            let nextRegisterVC = NextRegisterVC()
+            nextRegisterVC.tel = phoneTF.text!
+            
+            self.navigationController?.pushViewController(nextRegisterVC, animated: true)
+            
+            
+        } else {
+            showHint(in: self.view, hint: "验证码不正确")
+        }
     }
     
     func backAction() {

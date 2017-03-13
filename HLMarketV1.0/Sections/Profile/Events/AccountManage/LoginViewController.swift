@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SwiftyJSON
 
 class LoginViewController: BaseViewController {
 
@@ -67,7 +68,6 @@ class LoginViewController: BaseViewController {
         let btn = UIButton.init(type: UIButtonType.system)
         btn.setTitle("登录", for: UIControlState.normal)
         btn.setTitleColor(UIColor.white, for: UIControlState.normal)
-        
         btn.layer.borderColor = UIColor.init(r: 12, g: 205, b: 194).cgColor
         btn.layer.borderWidth = 1
         btn.layer.cornerRadius = 5
@@ -101,12 +101,54 @@ class LoginViewController: BaseViewController {
         self.navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "注册", style: UIBarButtonItemStyle.plain, target: self, action: #selector(LoginViewController.registerAction))
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
         
+        //MARK: --- 登录按钮添加点击事件
+        loginBtn.addTarget(self, action: #selector(loginAction), for: .touchUpInside)
         
         self.setupUI()
         self.layoutUI()
     }
     
+    
+    func loginAction() {
+        
+        if userTF.text == nil || pwdTF.text == nil {
+            showHint(in: view, hint: "用户名/密码不能为空")
+        } else {
+            
+            AlamofireNetWork.required(urlString: "/Simple_online/User_Log_in", method: .post, parameters: ["UserNo":userTF.text!,"Pass":pwdTF.text!], success: { (results) in
+                let json = JSON(results)
+                print(json)
+                if json["resultStatus"] == "1" {
+                    let dictObj = json["dDate"].dictionaryObject
+                    let userModel = UserAuthModel.init()
+                    if dictObj?["UserNo"] != nil {
+                        userModel.UserNo = dictObj?["UserNo"] as! String
+                    }
+                    if dictObj?["ImagePath"] != nil {
+                        userModel.UserIcon = dictObj?["ImagePath"] as! String
+                    }
+                   UserAuthManager.sharedManager.saveUserInfo(userModel: userModel)
+                    
+                    DispatchQueue.main.async(execute: {
+                        let vc = ProfileVC()
+                        self.navigationController?.pushViewController(vc, animated: true)
+                    })
+                }
+                
+            }, failure: { (error) in
+                print(error)
+            })
+        }
+        
+    }
+    
     func registerAction() {
+        
+        if UserAuthManager.sharedManager.isUserLogin() {
+            showHint(in: view, hint: "亲>已经登录啦!")
+            return
+        }
+        
         let registerVC = RegisterViewController()
         self.navigationController?.pushViewController(registerVC, animated: true)
     }
@@ -163,7 +205,7 @@ class LoginViewController: BaseViewController {
             make.top.equalTo(loginBtn.snp.bottom).offset(2)
             make.right.equalTo(loginBtn.snp.right)
             make.height.equalTo(15)
-            make.height.equalTo(40)
+            make.width.equalTo(40)
         }
         
     }

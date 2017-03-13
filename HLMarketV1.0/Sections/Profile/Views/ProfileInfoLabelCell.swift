@@ -11,6 +11,12 @@ import Foundation
 
 private let kProfileLabelCellMargin:CGFloat = 5
 
+struct InitBtnTag {
+    static var value = 23
+}
+
+typealias BtnClickClosure = (_ tag:Int?)->Void
+
 class ProfileInfoLabelCell: UITableViewCell {
 
     /*
@@ -34,6 +40,9 @@ class ProfileInfoLabelCell: UITableViewCell {
         return label
     }()
     */
+    
+    var btnClickClosure:BtnClickClosure?
+    
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -66,7 +75,10 @@ class ProfileInfoLabelCell: UITableViewCell {
             }
             let kMarginLeft = kProfileLabelCellMargin +  CGFloat(i) * (btnWidth + 1 + 2 * kProfileLabelCellMargin)
             btn.frame = CGRect(x: kMarginLeft, y: kProfileLabelCellMargin, width:btnWidth, height: self.bounds.size.height)
+            btn.tag = InitBtnTag.value + 100
+            InitBtnTag.value += 1
             self.contentView.addSubview(btn)
+            btn.addTarget(self, action: #selector(btnClick(sender:)), for: .touchUpInside)
         }
         var labelIndex = 0
         repeat {
@@ -79,6 +91,13 @@ class ProfileInfoLabelCell: UITableViewCell {
         } while labelIndex < boxCount - 1
     }
     
+    
+    
+    func btnClick(sender:UIButton?) {
+        if (btnClickClosure != nil) {
+            btnClickClosure!(sender?.tag)
+        }
+    }
     //-------------  建议数值不要超过4
     var boxCount:Int {
         get {

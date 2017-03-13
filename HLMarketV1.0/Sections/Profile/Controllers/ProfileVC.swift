@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 
 private let kProfileTableCellID = "kProfileTableCellID"
 private let kProfileInfoLabelCellID = "kProfileInfoLabelCell"
@@ -42,9 +43,12 @@ class ProfileVC: BaseViewController {
             let registerVC = LoginViewController()
             self?.navigationController?.pushViewController(registerVC, animated: true)
         }
+        headerView.uploadPicCallBack = {[weak self] in
+            self?.uploadPicAction()
+        }
+        
         return tableview
     }()
-    
     
     
     override func viewDidLoad() {
@@ -74,7 +78,7 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
         case 2:
             return 1
         default:
-            return 5
+            return 3
         }
     }
     
@@ -84,6 +88,21 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
             let cell:ProfileInfoLabelCell = tableView.dequeueReusableCell(withIdentifier: kProfileInfoLabelCellID, for: indexPath) as! ProfileInfoLabelCell
             let personalInfoArray = [("0", "收藏的商品"), ("1", "我的足迹")]
             let vipCardArray = [("0", "我的积分"), ("0", "会员福利")]
+            cell.btnClickClosure = {(tag:Int?)->Void in
+                //MARK: --- tag 值分别是123, 124, 125, 126 , 对应的是收藏商品, 我的足迹, 我的积分, 会员福利
+                
+                print("---\(tag!)")
+                
+                switch tag! {
+                case 123:
+                    let vc = GoodsCollectedVC()
+                    self.navigationController?.pushViewController(vc, animated: true)
+                    break
+                default:
+                    
+                    break
+                }
+            }
             
             let textDic = ["personalInfoLabel":personalInfoArray, "vipCardLabel":vipCardArray]
             switch indexPath.section {
@@ -99,13 +118,14 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 1 {
         
             let cell = tableView.dequeueReusableCell(withIdentifier: kProfileCollectionCellID) as! ProfileCollectionCell
+            cell.delegate = self
             
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: kProfileTableCellID)
             //定义cell的样式
             
-            let listInfoArray = [("hlm_coupon", "我的优惠券"), ("hlm_integral_mall", "积分商城"), ("hlm_account_manage", "账号管理"), ("hlm_address", "收货地址"), ("hlm_upgrad", "如何升级")]
+            let listInfoArray = [("hlm_account_manage", "账号管理"), ("hlm_address", "收货地址"), ("hlm_upgrad", "如何升级")]
             
             cell?.imageView?.image = UIImage.init(named: listInfoArray[indexPath.row].0)
             cell?.textLabel?.text = listInfoArray[indexPath.row].1
@@ -133,26 +153,20 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
         
         if indexPath.section == 3 {
             if indexPath.row == 0 {
-                let couponManageVC = CouponVC()
-                self.navigationController?.pushViewController(couponManageVC, animated: true)
-            } else if indexPath.row == 3 {
+                //MARK: --- 点击这里应该跳转到用户管理页面
+                
+            } else if indexPath.row == 1 {
+                //MARK: ---点击这里应该挑战到地址管理页面
                 let addressVC = AddressManageVC()
                 self.navigationController?.pushViewController(addressVC, animated: true)
+            } else {
+                //MARK: --- 点击这里应该跳转到如何设计页面
             }
             
         }
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+  
     //-------------------- 定义headerView的大小和样式
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
@@ -206,5 +220,159 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
     }
     
 }
+
+
+//MARK: --- 实现ProfileCellectionViewcell Delegate
+
+extension ProfileVC:ProfileCollectionCellDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print("代理打印---[\(indexPath.section), \(indexPath.row)]")
+        
+        let titleArr = ["全部订单", "待付款", "待发货", "待收货", "已完成"]
+        let index = indexPath.row
+        var VC:BaseViewController?
+        switch index {
+        case 0:
+            VC = AllOrdersVC()
+        case 1:
+            VC = UnpayOrdersVC()
+        case 2:
+            VC = UnpostOrdersVC()
+        case 3:
+            VC = UnrecevieOrdersVC()
+        default:
+            VC = FinishedOrdersVC()
+        }
+        
+        if VC != nil {
+            VC?.navigationItem.title = titleArr[index]
+            self.navigationController?.pushViewController(VC!, animated: true)
+        } else {
+            return
+        }
+    }
+}
+
+//MARK: --- 上传图片控制
+
+extension ProfileVC:UIImagePickerControllerDelegate,UINavigationControllerDelegate {
+    
+    
+    func uploadPicAction() {
+        let alertVC = UIAlertController.init(title: "上传图像", message: nil, preferredStyle: .actionSheet)
+        
+        let albumAction = UIAlertAction.init(title: "相机", style: .default) {
+           (action:UIAlertAction) -> Void in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                
+                let picker = UIImagePickerController()
+                picker.sourceType = .camera
+                picker.allowsEditing = true
+                picker.delegate = self
+                self.present(picker, animated: true, completion: nil)
+                
+            } else {
+                print("模拟其中无法打开照相机,请在真机中使用")
+            }
+           
+        }
+        
+        let cameraAction = UIAlertAction.init(title: "相册", style: .default) {
+            (action: UIAlertAction) -> Void in
+           let picker = UIImagePickerController()
+            picker.sourceType = .photoLibrary
+            picker.delegate = self
+            picker.allowsEditing = true
+            self.present(picker, animated: true, completion: nil)
+           
+        }
+        
+        let cancelAction = UIAlertAction.init(title: "取消", style: .cancel) { (UIAlertAction) in
+            
+        }
+        
+        alertVC.addAction(albumAction)
+        alertVC.addAction(cameraAction)
+        alertVC.addAction(cancelAction)
+        
+        self.navigationController?.present(alertVC, animated: true, completion: { 
+            
+        })
+        
+    }
+    
+    
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
+        
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            //let imageData = UIImagePNGRepresentation(image)
+            /*
+            Alamofire.upload(imageData!, to: "http://zhaoqiuyang.xicp.net:35635/Simple_online/Upload_User_Image").responseJSON { response in
+                debugPrint(response)
+            }
+             */
+            /*
+            Alamofire.upload(
+                multipartFormData: { multipartFormData in
+                    multipartFormData.append(unicornImageURL, withName: "unicorn")
+                    multipartFormData.append(rainbowImageURL, withName: "rainbow")
+            },
+                to: "https://httpbin.org/post",
+                encodingCompletion: { encodingResult in
+                    switch encodingResult {
+                    case .success(let upload, _, _):
+                        upload.responseJSON { response in
+                            debugPrint(response)
+                        }
+                    case .failure(let encodingError):
+                        print(encodingError)
+                    }
+            }
+            )
+             */
+            let homeDirectory = NSHomeDirectory()
+            let documentPath = homeDirectory + "/Documents"
+            print(documentPath)
+            let fileManager = FileManager.default
+            do {
+                try fileManager.createDirectory(atPath: documentPath, withIntermediateDirectories: true, attributes: nil)
+            }
+            catch let error {
+                print(error)
+            }
+            let imageData = UIImagePNGRepresentation(image)
+            let imagePath = documentPath+"/image.png"
+            fileManager.createFile(atPath: imagePath, contents: imageData, attributes: nil)
+            let filePath: String = String(format: "%@%@", documentPath, "/image.png")
+            print("filePath:" + filePath)
+            
+            Alamofire.upload(multipartFormData: { (multipartFormData) in
+                //let lastData = NSData(contentsOfFile: filePath)
+                multipartFormData.append(URL.init(fileURLWithPath: filePath), withName: "image")
+            }, to: "http://zhaoqiuyang.xicp.net:35635/Simple_online/Upload_User_Image", encodingCompletion: { (result) in
+                print(result)
+            })
+            
+        }
+        else {
+        
+        
+        }
+        
+        picker.dismiss(animated: true, completion: nil)
+        
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
 
 

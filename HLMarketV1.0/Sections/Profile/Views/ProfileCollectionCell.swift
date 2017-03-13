@@ -10,8 +10,7 @@ import UIKit
 
 
 protocol ProfileCollectionCellDelegate {
-    
-    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     
 }
 
@@ -80,9 +79,10 @@ extension ProfileCollectionCell:UICollectionViewDataSource, UICollectionViewDele
         
         return cell;
     }
-    
+    //MARK: --- 这里进行订单页面跳转
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("[\(indexPath.section), \(indexPath.row)]")
+        
+        delegate?.collectionView(collectionView, didSelectItemAt: indexPath)
     }
 }
 
@@ -116,7 +116,7 @@ class CellSubView:UIView {
     }
     
     override func layoutSubviews() {
-        let kMargin:CGFloat = 10
+        let kMargin:CGFloat = 20
         imageView.frame = CGRect(x: kMargin, y: kMargin, width: self.bounds.size.width - 2 * kMargin, height: self.bounds.size.width - 2 * kMargin)
         titleLabel.frame = CGRect(x: 0, y: 0.6 * self.bounds.size.height, width: self.bounds.size.width, height: 0.4 * self.bounds.size.height)
     }

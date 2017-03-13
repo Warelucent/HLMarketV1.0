@@ -9,7 +9,7 @@
 
 import UIKit
 
-class UserAuthModel: NSObject {
+class UserAuthModel: NSObject, NSCoding {
 
     var UserNo :  String = ""
     var Email  :  String = ""
@@ -17,13 +17,32 @@ class UserAuthModel: NSObject {
     var UserName: String = ""
     var UserIcon: String = ""
     
-    init(dict: [String:Any]) {
+    override init() {
         super.init()
-        setValuesForKeys(dict)
+    }
+    
+    //编码成object
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(UserNo, forKey: "UserNo")
+        aCoder.encode(Email, forKey: "Email")
+        aCoder.encode(UserPass, forKey: "UserPass")
+        aCoder.encode(UserName, forKey: "UserName")
+        aCoder.encode(UserIcon, forKey: "UserIcon")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+        UserNo = aDecoder.decodeObject(forKey: "UserNo") as! String
+        Email  = aDecoder.decodeObject(forKey: "Email") as! String
+        UserPass = aDecoder.decodeObject(forKey: "UserPass") as! String
+        UserName = aDecoder.decodeObject(forKey: "UserName") as! String
+        UserIcon = aDecoder.decodeObject(forKey: "UserIcon") as! String
     }
     
     override func setValue(_ value: Any?, forUndefinedKey key: String) {
         
     }
+    
+    
     
 }

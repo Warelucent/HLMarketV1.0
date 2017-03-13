@@ -50,7 +50,16 @@ class AddNewAdressInfoCell: UITableViewCell {
             make.left.equalTo(titleLabel.snp.right).offset(5)
         }
     }
-    
+    override var frame:CGRect{
+        didSet {
+            var newFrame = frame
+            //newFrame.origin.x += 10/2
+            //newFrame.size.width -= 10
+            //newFrame.origin.y += 10
+            newFrame.size.height -= 1
+            super.frame = newFrame
+        }
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

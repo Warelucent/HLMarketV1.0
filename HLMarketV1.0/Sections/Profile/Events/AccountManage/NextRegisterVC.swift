@@ -12,6 +12,8 @@ class NextRegisterVC: BaseViewController {
 
     lazy var topBoxView = {UIView.init()}()
     
+    var tel:String? = nil
+    
     lazy var pwdTF = {() -> UITextField in
         let textfield = UITextField.init()
         let rect = CGRect(x: 0, y: 0, width: 60, height: 30)
@@ -86,13 +88,50 @@ class NextRegisterVC: BaseViewController {
         self.view.backgroundColor = UIColor.init(gray: 252)
         
         self.navigationItem.title = "密码设置"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(imageName: "hlm_back_icon", highLightImage: "", size: CGSize(width:15, height:15), target: self, action: #selector(LoginViewController.backAction))
-        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(imageName: "hlm_back_icon", highLightImage: "", size: CGSize(width:15, height:15), target: self, action: #selector(NextRegisterVC.backAction))
+        self.registerBtn.addTarget(self, action: #selector(NextRegisterVC.registerAction), for: .touchUpInside)
         
         self.setupUI()
         self.layoutUI()
     }
 
+    func registerAction() {
+        if pwdTF.text == nil || confirmPwdTF.text == nil {
+            showHint(in: view, hint: "密码不能为空")
+            return
+        }
+        
+        if pwdTF.text != confirmPwdTF.text {
+            showHint(in: view, hint: "密码不一致!")
+            return
+        }
+        
+        do {
+            let pattern = "^[A-Z0-9a-z]{6,18}"
+            let validateString = pwdTF.text!
+            
+            let regex: NSRegularExpression = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive)
+            let matches = regex.matches(in: validateString, options: NSRegularExpression.MatchingOptions.reportProgress, range: NSMakeRange(0, validateString.characters.count))
+            if matches.count > 0 {
+                //网络请求, 进行注册
+                AlamofireNetWork.required(urlString: "/Simple_online/User_Register", method: .post, parameters: ["Tel":self.tel!, "PassWord":pwdTF.text!], success: { (results) in
+                    print(results)
+                }, failure: { (error) in
+                    print(error)
+                })
+                
+                
+            } else {
+                showHint(in: view, hint: "密码强度过低!")
+                return
+            }
+        }
+        catch {
+            
+        }
+    
+        
+    }
     
     func setupUI() {
         view.addSubview(topBoxView)
