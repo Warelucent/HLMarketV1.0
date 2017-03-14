@@ -16,7 +16,6 @@ private let kSearchCellCollectionViewCellMargin:CGFloat = 8
 
 class SearchVC: BaseViewController, PageTitleViewDelegate {
 
-    
     fileprivate lazy var tableView:UITableView = { [weak self] in
         let tableView = UITableView.init(frame: (self?.view.bounds)!, style: UITableViewStyle.plain)
         
@@ -46,7 +45,9 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
     
     fileprivate var dataArr = Array<ShopCartStyleModel>()
     
-    fileprivate var currentType: Int = 1
+    fileprivate var currentType: Int = 0
+    
+    fileprivate var crrentSortType: Int = 0
     
     fileprivate var currentPage = 1
     
@@ -69,18 +70,16 @@ class SearchVC: BaseViewController, PageTitleViewDelegate {
             }
         }
         
-        getSearchDate(type: currentType, fage: "0", pages: currentPage)
+        getSearchDate(type: currentType, fage: crrentSortType, pages: currentPage)
         
     }
     
     // MARK: -- 获取数据
-    func getSearchDate(type: Int, fage: String, pages: Int) -> Void {
+    func getSearchDate(type: Int, fage: Int, pages: Int) -> Void {
         
-        let parameters = ["Sort_type":"\(type)","fage":fage,"Number_of_pages":"\(pages)"]
+        let parameters = ["Sort_type":"\(type)","fage":"\(fage)","Number_of_pages":"\(pages)"]
         
         AlamofireNetWork.required(urlString: "/Simple_online/Select_Search_Goods", method: .post, parameters: parameters, success: { (result) in
-            
-            print(result)
             
             let json = JSON(result)
             
@@ -134,9 +133,9 @@ extension SearchVC:UITableViewDelegate, UITableViewDataSource {
         let itemWidth = (kScreenW - 3 * kSearchCellCollectionViewCellMargin)/2.0
         let size = CGSize(width:itemWidth, height:itemWidth*1.5)
         layout.itemSize = size
-        layout.minimumLineSpacing = 8
+        layout.minimumLineSpacing = kSearchCellCollectionViewCellMargin
         layout.minimumInteritemSpacing = 0
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
+        layout.sectionInset = UIEdgeInsets(top: kSearchCellCollectionViewCellMargin, left: kSearchCellCollectionViewCellMargin, bottom: kSearchCellCollectionViewCellMargin, right: kSearchCellCollectionViewCellMargin)
         
         colView = UICollectionView(frame: cell.bounds, collectionViewLayout:layout)
         
@@ -194,7 +193,7 @@ extension SearchVC:UITableViewDelegate, UITableViewDataSource {
         
         
         let botPageRect = CGRect(x: 0, y: 40, width: kScreenW, height: 30)
-        botPageView = PageTitleView.init(frame: botPageRect, titles: ["默认", "价格", "销量", "浏览数"])
+        botPageView = PageTitleView.init(frame: botPageRect, titles: ["默认", "价格", "销量", "浏览数"], isDoubleClick: true)
         botPageView?.delegate = self
         
         headerView.addSubview(topBoxView)
@@ -249,6 +248,12 @@ extension SearchVC: UITextFieldDelegate {
     }
     // MARK: -- PageTitleViewDelegate
     func pageTitleView(_ titleView : PageTitleView, selectedIndex index : Int) {
+        //"默认"的排序方式只能为"0"
+        if currentType != 0 && currentType == index && crrentSortType == 0 {
+            crrentSortType = 1
+        }else{
+            crrentSortType = 0
+        }
         
         isLoad = false
         
@@ -260,7 +265,7 @@ extension SearchVC: UITextFieldDelegate {
         
         currentType = index
         
-        getSearchDate(type: currentType, fage: "0", pages: currentPage)
+        getSearchDate(type: currentType, fage: crrentSortType, pages: currentPage)
     }
     // MARK: -- UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -323,7 +328,7 @@ extension SearchVC:UICollectionViewDelegate, UICollectionViewDataSource {
         if  colView?.cellForItem(at: IndexPath(row: dataArr.count - 3, section: 0)) != nil && self.isLoad {
             self.isLoad = false
             currentPage += 1
-            getSearchDate(type: currentType, fage: "0", pages: currentPage)
+            getSearchDate(type: currentType, fage: crrentSortType, pages: currentPage)
         }
     }
     //滑动时不让点击botPageView

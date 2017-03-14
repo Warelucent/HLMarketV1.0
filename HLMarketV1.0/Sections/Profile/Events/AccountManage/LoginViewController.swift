@@ -130,8 +130,9 @@ class LoginViewController: BaseViewController {
                    UserAuthManager.sharedManager.saveUserInfo(userModel: userModel)
                     
                     DispatchQueue.main.async(execute: {
-                        let vc = ProfileVC()
-                        self.navigationController?.pushViewController(vc, animated: true)
+                       _ = self.navigationController?.popViewController(animated:true)
+                        let notificationName = "loginSucessNotification"
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: notificationName), object: self,userInfo: [:])
                     })
                 }
                 

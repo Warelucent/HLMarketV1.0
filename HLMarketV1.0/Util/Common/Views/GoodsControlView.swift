@@ -12,14 +12,18 @@ enum GoodsControlType {
     case counts
     case plusOrReduce
 }
-
+protocol GoodsControlViewDelegate {
+    func numberButtonResult(_ numberButton: PPNumberButton, number: String)
+}
 
 private let kGRadio:CGFloat = 0.618
 
 class GoodsControlView: UIView {
     
+    var delegate:GoodsControlViewDelegate?
+    
     var type:GoodsControlType = .counts
-
+    
     var model:GoodsControlModel? {
         didSet {
             goodsAvtarView.image = UIImage.init(named: (model?.avtarImage)!)
@@ -62,13 +66,14 @@ class GoodsControlView: UIView {
     
     
     //右边视图元素
-    /* 
-        这个视图应该是加减控制按钮的空间视图, 可以自带加减方法, 
-        并在每次点击之后可以返回一个数值,
-        当数值的值为1的时候, 左边的按钮应该处于不可点击状态
+    /*
+     这个视图应该是加减控制按钮的空间视图, 可以自带加减方法,
+     并在每次点击之后可以返回一个数值,
+     当数值的值为1的时候, 左边的按钮应该处于不可点击状态
      */
     lazy var plusOrReduceBtn:PPNumberButton = {() -> PPNumberButton in
         let btn = PPNumberButton.init()
+        btn.delegate = self
         btn.borderColor(UIColor.init(gray: 210))
         return btn
     }()
@@ -102,7 +107,7 @@ class GoodsControlView: UIView {
         }
     }
     
-    //布局 
+    //布局
     override func layoutSubviews() {
         let kGoodsControlViewMargin:CGFloat = 5
         leftBoxView.snp.makeConstraints { (make) in
@@ -151,17 +156,23 @@ class GoodsControlView: UIView {
                 make.height.equalTo(30)
             }
         }
-
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
+    
 }
 
 
-
+extension GoodsControlView:PPNumberButtonDelegate {
+    func numberButtonResult(_ numberButton: PPNumberButton, number: String) {
+        if let delegate = delegate {
+            delegate.numberButtonResult(numberButton, number: number)
+        }
+    }
+}
 
 
 

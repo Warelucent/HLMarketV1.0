@@ -13,7 +13,7 @@ let CViewCellMargin: CGFloat = 8//collectionView的cell之间的间隔
 let CViewCellWid: CGFloat = (kScreenW - 5 * 8)/4//collectionView的cell宽度
 let CViewCellHei: CGFloat = 60//collectionView的cell宽度
 let CViewCellWid1: CGFloat = (kScreenW - 3 * 8)/2//collectionView的cell宽度
-func CViewCeil(_ count: Int, _ divisor: Int) -> CGFloat{return CGFloat(ceil(Float(count)/Float(divisor)))}//数组count除以2在向上取整
+func CViewCeil(_ count: Int, _ divisor: Int) -> CGFloat{return CGFloat(ceil(Float(count)/Float(divisor)))}//数组count除以divisor在向上取整
 let ClassifyTypeColViewID = "ClassifyTypeColViewID"
 let ClassifyTypeColViewCellID = "ClassifyTypeColViewCellID"
 let VADColViewID = "VADColViewID"
@@ -64,8 +64,6 @@ class HomeVC: BaseViewController,XRCarouselViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getHomeData()
-        
         self.setup()
     }
     
@@ -97,6 +95,7 @@ extension HomeVC{
                                  for: MJRefreshStateRefreshing)
         
         tableView?.header = refreshHeader
+        tableView?.header.beginRefreshing()
         //添加轮播图
         self.addCarouselView()
     }
@@ -128,7 +127,11 @@ extension HomeVC{
                 
             }else {
                 ///数据返回失败 从沙盒中获取
-                resultDict = JSON(self.getPlist(filename: "HomeData.plist"))
+                if self.getPlist(filename: "HomeData.plist").state == false {
+                    return
+                }
+                
+                resultDict = JSON(self.getPlist(filename: "HomeData.plist").plist)
                 
                 if resultDict == JSON.null {
                     return
@@ -147,7 +150,11 @@ extension HomeVC{
             var resultDict = JSON.null
             
             ///数据返回失败 从沙盒中获取
-            resultDict = JSON(self.getPlist(filename: "HomeData.plist"))
+            if self.getPlist(filename: "HomeData.plist").state == false {
+                return
+            }
+            
+            resultDict = JSON(self.getPlist(filename: "HomeData.plist").plist)
             
             if resultDict == JSON.null {
                 return
@@ -187,7 +194,7 @@ extension HomeVC{
             
             let modelArr = VADModel.mj_objectArray(withKeyValuesArray: dic["t_Goods"].arrayObject)
             
-            newArr3.append(["title":dic["title"].description,"data":modelArr ?? [VADModel]()])
+            newArr3.append(["fage":dic["fage"].description,"title":dic["title"].description,"data":modelArr ?? [VADModel]()])
         }
         
         self.dataArr3 = newArr3
@@ -196,9 +203,23 @@ extension HomeVC{
         carouselView.reload(withImageArray: self.imageUrls, describe: self.imageNames)
     }
     
-    // MARK: -- XRCarouselViewDelegate
+    // MARK: -- XRCarouselViewDelegate轮播图点击事件
     @objc(carouselView:clickImageAtIndex:) func carouselView(_ carouselView: XRCarouselView!, clickImageAt index: Int) {
+        let model = dataArr1[index]
         
+        let vc = GoodsDetailViewController()
+        vc.cGoodsNo = model.adcGoodsNo
+        vc.price = model.fNormalPrice
+        vc.vipPrice = model.fVipPrice
+        navigationController?.pushViewController(vc, animated: true)
+        
+    }
+    // MARK: -- 更多按钮点击事件
+    func moreBtnAction(btn: UIButton) -> Void {
+        let dic = dataArr3[btn.tag-1] 
+        let vc = MoreGoodsVC()
+        vc.data = (dic["title"] as! String,dic["fage"] as! String)
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
 }
@@ -213,14 +234,14 @@ extension HomeVC{
         }
     }
     //获取plist文件
-    func getPlist(filename:String) -> AnyObject {
+    func getPlist(filename:String) -> (state: Bool, plist: AnyObject) {
         let plist = NSDictionary(contentsOfFile:SavePlistfilename(filename: filename))
         
         if plist != nil {
-            return plist!
+            return (true,plist!)
         }
         
-        return "没数据" as AnyObject
+        return (false,"没数据" as AnyObject)
     }
 }
 
@@ -236,7 +257,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
     
     ///设置组数
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1+dataArr3.count
+        return dataArr2.count != 0 ? 1+dataArr3.count : 0
     }
     
     ///设置cell
@@ -285,6 +306,19 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource {
         }
         
         headerView?.titleLabel.text = text
+        headerView?.moreBtn.tag = section
+        headerView?.moreBtn.addTarget(self, action: #selector(moreBtnAction(btn:)), for: .touchUpInside)
+        
+        switch section {
+        case 1:
+            headerView?.typeImageView.image = #imageLiteral(resourceName: "hlm_home_recommend")
+        case 2:
+            headerView?.typeImageView.image = #imageLiteral(resourceName: "hlm_home_newproduct")
+        case 3:
+            headerView?.typeImageView.image = #imageLiteral(resourceName: "hlm_home_sale")
+        default:
+            headerView?.typeImageView.image = #imageLiteral(resourceName: "hlm_home_newproduct")
+        }
         
         return headerView
         
@@ -442,7 +476,7 @@ extension HomeVC:UICollectionViewDelegate, UICollectionViewDataSource {
 //            cell.layer.masksToBounds = true
             
             let model = dataArr2[indexPath.row]
-            model.cIMG = "hlm_test_pic.jpg"
+            model.cIMG = DefaultURL+"/Simple_online/"+model.ImagePath
             cell.classifyTypeModel = model
             return cell
         default:

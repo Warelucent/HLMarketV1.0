@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SwiftyJSON
 
 
 private let kAddNewAdressVCInfoCellID = "kAddNewAdressVCInfoCellID"
@@ -17,25 +16,17 @@ private let kAddNewAdressVDefaultCellID = "kAddNewAdressVDefaultCellID"
 
 
 
-class AddNewAdressVC: UITableViewController {
+class EditAddressVC: UITableViewController {
 
     
-    var areaString:String = ""
-    var username:String = ""
-    var userphone:String = ""
-    var userDetailAdressInfo:String = ""
-    var default_fage:String = ""
-    
-    var userAdressModel:AddressUserModel?
+    var areaString:String?
+    var model:AddressUserModel?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationItem.title = "新增收货地址"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem.init(imageName: "hlm_back_icon", highLightImage: "", size: CGSize(width:20, height:20), target: self, action: #selector(AddNewAdressVC.backAction))
-        
-            
+        self.navigationItem.title = "编辑收货地址"
         
         tableView.backgroundColor = UIColor.init(gray: 252)
         tableView.separatorStyle = UITableViewCellSeparatorStyle.singleLine
@@ -46,10 +37,11 @@ class AddNewAdressVC: UITableViewController {
         tableView.register(ANASetDefaultCell.self, forCellReuseIdentifier: kAddNewAdressVCSetCellID)
         
     }
-    func backAction() {
-        _ = self.navigationController?.popViewController(animated: true)
-    }
 
+    func backAction() {
+        
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
        
@@ -68,41 +60,34 @@ class AddNewAdressVC: UITableViewController {
         if indexPath.row == 0 || indexPath.row == 1 || indexPath.row == 3 {
             let cell:AddNewAdressInfoCell = tableView.dequeueReusableCell(withIdentifier: kAddNewAdressVCInfoCellID, for: indexPath) as! AddNewAdressInfoCell
             let textArray = ["收货人", "手机号码", nil, "详细地址"]
+            let textInputArray = [model?.UserName, model?.Tel, nil, model?.Detailaddress]
+            
             cell.titleLabelText = textArray[indexPath.row]
-            switch indexPath.row {
-            case 0:
-                //MARK: --- 这里要做一下正则判断
-                username =  cell.inputTextField.text!
-            case 1:
-                userphone = cell.inputTextField.text!
-            case 3:
-                userDetailAdressInfo = cell.inputTextField.text!
-            default:
-                break
-            }
+            cell.inputTextField.text = textInputArray[indexPath.row]
+            
             return cell
         } else if indexPath.row == 2 {
             let cell = UITableViewCell.init(style: UITableViewCellStyle.value1, reuseIdentifier: "areaCell")
             cell.textLabel?.text = "所在地区"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            cell.textLabel?.textColor = UIColor.init(gray: 168)
+            cell.textLabel?.textColor = UIColor.init(gray: 118)
             
-            cell.detailTextLabel?.text = areaString
-            
+            if areaString == nil {
+                cell.detailTextLabel?.text = model?.UserMainAdressInfo
+            } else {
+                cell.detailTextLabel?.text = areaString
+            }
             cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             
             return cell
         } else {
             let cell:ANASetDefaultCell = tableView.dequeueReusableCell(withIdentifier: kAddNewAdressVCSetCellID, for: indexPath) as! ANASetDefaultCell
-            
-            default_fage = cell.isChecked ? "0" : "1"
-            
             return cell
         }
     }
     
     override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 60;
+        return 60
     }
     
     override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -110,7 +95,7 @@ class AddNewAdressVC: UITableViewController {
         boxView.backgroundColor = UIColor.white
         
         let btn = UIButton.init(type: UIButtonType.system)
-        btn.setTitle("保存并使用", for: .normal)
+        btn.setTitle("保存", for: .normal)
         btn.setTitleColor(UIColor.white, for: .normal)
         btn.frame = CGRect(x: kScreenW / 5, y: 7, width: kScreenW / 5 * 3, height: 40)
         boxView.addSubview(btn)
@@ -121,57 +106,9 @@ class AddNewAdressVC: UITableViewController {
         btn.layer.masksToBounds = true
         btn.layer.backgroundColor = UIColor.appMainColor().cgColor
         
-        
-        btn.addTarget(self, action: #selector(addNewAddressAction), for: .touchDragInside)
         return boxView
     }
     
-    func addNewAddressAction() {
-        
-        //MARK: --- 必须进行一下这个操作, 使其赋值
-        self.tableView.reloadData()
-        
-        //对字符串进行在处理
-        print("\(default_fage) + \(username) + \(userphone) + \(userDetailAdressInfo) + \(areaString)")
-        
-        let areaArr = areaString.components(separatedBy: "-")
-        print(areaArr)
-        let ProvincialString:String = areaArr[0]
-        let CityString:String = areaArr[1]
-        var DistrictString = ""
-        if areaArr.count == 3 {
-            DistrictString = areaArr[2]
-        }
-        
-        //MARK: --- 这里应该还有一个对用户输入信息的正则判断, 防止用户输入的是错误的数据格式
-        
-        
-       
-        if let userNo = UserAuthManager.sharedManager.getUserModel()?.UserNo {
-            
-        AlamofireNetWork.required(urlString: "/Simple_online/Add_User_Address", method: .post, parameters: ["UserNo":userNo,
-            "Tel":userphone,
-            "UserName":username,
-            "Provincial":ProvincialString,
-            "City":CityString,
-            "District":DistrictString,
-            "Detailaddress":userDetailAdressInfo,
-            "Default_fage":default_fage], success: { [weak self](result) in
-            let json = JSON(result)
-                if json["resultStatus"] == "1" {
-                    DispatchQueue.main.async(execute: {
-                        //showHint(in: tableView, hint: "添加地址成功!")
-                        _ = self?.navigationController?.popViewController(animated: true)
-                        
-                    })
-                }
-        }) { (error) in
-            print(error)
-        }
-        
-        }
-        
-    }
     
     
     
@@ -232,7 +169,7 @@ class AddNewAdressVC: UITableViewController {
 }
     
 
-extension AddNewAdressVC:PickerDelegate {
+extension EditAddressVC:PickerDelegate {
     
     func chooseDate(picker: LmyPicker, date: Date) {
         areaString = date.string_from(formatter: "yyyy-MM-dd")

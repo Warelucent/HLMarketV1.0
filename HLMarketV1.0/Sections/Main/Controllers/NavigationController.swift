@@ -23,7 +23,7 @@ class NavigationController: UINavigationController {
         print(self.viewControllers.count)
         
         if self.viewControllers.count < 1 {
-            viewController.navigationItem.rightBarButtonItem = setRightButton()
+//            viewController.navigationItem.rightBarButtonItem = setRightButton()
             
         } else {
             viewController.hidesBottomBarWhenPushed = true
@@ -45,23 +45,23 @@ class NavigationController: UINavigationController {
         return UIBarButtonItem.init(customView: backButton)
     }
     
-    /// MARK: - 设置导航栏右边按钮
-    func setRightButton() -> UIBarButtonItem {
-        
-        let searchItem = UIButton.init(type: .custom)
-        searchItem.setImage(UIImage(named: "searchbutton_nor"), for: .normal)
-        searchItem.sizeToFit()
-        searchItem.frame.size = CGSize(width: 30, height: 30)
-        searchItem.contentHorizontalAlignment = .right
-        searchItem.addTarget(self, action: #selector(NavigationController.searchClick), for: .touchUpInside)
-        return UIBarButtonItem.init(customView: searchItem)
-    }
-    
-    /// MARK: - 点击右边的搜索
-    func searchClick() {
-        let searchvc = SearchVC()
-        self.pushViewController(searchvc, animated: true)
-    }
+//    /// MARK: - 设置导航栏右边按钮
+//    func setRightButton() -> UIBarButtonItem {
+//        
+//        let searchItem = UIButton.init(type: .custom)
+//        searchItem.setImage(UIImage(named: "searchbutton_nor"), for: .normal)
+//        searchItem.sizeToFit()
+//        searchItem.frame.size = CGSize(width: 30, height: 30)
+//        searchItem.contentHorizontalAlignment = .right
+//        searchItem.addTarget(self, action: #selector(NavigationController.searchClick), for: .touchUpInside)
+//        return UIBarButtonItem.init(customView: searchItem)
+//    }
+//    
+//    /// MARK: - 点击右边的搜索
+//    func searchClick() {
+//        let searchvc = SearchVC()
+//        self.pushViewController(searchvc, animated: true)
+//    }
     
     /// MARK: - 返回
     func backClick() {

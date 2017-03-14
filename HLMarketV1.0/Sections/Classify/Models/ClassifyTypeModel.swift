@@ -17,5 +17,6 @@ class ClassifyTypeModel: BaseModel {
     var cMarket = ""
     var cParentNo = ""
     var cPath = ""
+    var ImagePath = ""
     
 }

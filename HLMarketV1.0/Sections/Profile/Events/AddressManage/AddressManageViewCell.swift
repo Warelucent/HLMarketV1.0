@@ -16,10 +16,17 @@ enum AddressManageViewCellType {
     case hideCheckBtn
 }
 
+
+protocol AddressManageViewCellDelegate {
+    func deleteAdress(sender:UIButton, cellID:Int)
+    func editAddress(sender:UIButton, cellID:Int)
+}
+
 class AddressManageViewCell: UITableViewCell {
 
     var cellID:Int = 0
     var clickDefaultBtnClosure:VoidClouser?
+    var delegate:AddressManageViewCellDelegate?
     
     var isChoosed:Bool? {
         didSet {
@@ -88,6 +95,7 @@ class AddressManageViewCell: UITableViewCell {
         btn.setTitle("删除", for: .normal)
         btn.setTitleColor(UIColor.init(gray: 14), for: .normal)
         
+        
         return btn
     }()
     lazy var setDefaultBtn = {() -> UIButton in
@@ -101,7 +109,13 @@ class AddressManageViewCell: UITableViewCell {
         label.textColor = UIColor.black
         return label
     }()
-
+    
+    lazy var botSepLabel = {() ->UILabel in
+        let label = UILabel.init()
+        label.backgroundColor = BGCOLOR
+        
+        return label
+    }()
     
     var addressUserModel:AddressUserModel? {
         didSet{
@@ -112,6 +126,19 @@ class AddressManageViewCell: UITableViewCell {
     }
     
     
+    func editAction(sender:UIButton) {
+        if let delegate = delegate {
+            
+            delegate.editAddress(sender: sender, cellID: cellID)
+        }
+    }
+    
+    func deleteAction(sender:UIButton) {
+        if let delegate = delegate {
+            delegate.deleteAdress(sender: sender, cellID: cellID)
+        }
+    }
+    
     
      override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
@@ -119,11 +146,13 @@ class AddressManageViewCell: UITableViewCell {
         
         self.contentView.addSubview(topViewBox)
         self.contentView.addSubview(botViewBox)
-    
+        self.contentView.addSubview(botSepLabel)
+        
         self.botViewBox.addSubview(editBtn)
         self.botViewBox.addSubview(deleteBtn)
         self.botViewBox.addSubview(setDefaultBtn)
         self.botViewBox.addSubview(setDefaultLabel)
+        
         
         
         
@@ -132,6 +161,8 @@ class AddressManageViewCell: UITableViewCell {
         self.topViewBox.addSubview(userAddressTF)
         self.topViewBox.addSubview(sepline)
         
+        deleteBtn.addTarget(self, action: #selector(deleteAction(sender:)), for: .touchUpInside)
+        editBtn.addTarget(self, action: #selector(editAction(sender:)), for: .touchUpInside)
         
         
         setDefaultBtn.addTarget(self, action: #selector(setDefaultAction(sender:)), for: .touchUpInside)
@@ -157,6 +188,8 @@ class AddressManageViewCell: UITableViewCell {
         }
         
     }
+    
+    /*
     override var frame:CGRect{
         didSet {
             var newFrame = frame
@@ -164,7 +197,7 @@ class AddressManageViewCell: UITableViewCell {
             super.frame = newFrame
         }
     }
-    
+    */
     
     override func layoutSubviews() {
         /*
@@ -212,13 +245,16 @@ class AddressManageViewCell: UITableViewCell {
             make.height.equalTo(0.5)
         }
         //MARK: --- botboxview snp
+        botSepLabel.snp.makeConstraints { (make) in
+            make.bottom.left.right.equalToSuperview()
+            make.height.equalTo(10)
+        }
         
         botViewBox.snp.makeConstraints { (make) in
             make.left.right.equalTo(topViewBox)
             make.top.equalTo(topViewBox.snp.bottom).offset(5)
-            make.bottom.equalToSuperview().offset(-3)
+            make.bottom.equalTo(botSepLabel.snp.top).offset(-3)
         }
-        
         setDefaultBtn.snp.makeConstraints { (make) in
             make.left.equalToSuperview()
             make.centerY.equalToSuperview()
@@ -230,6 +266,7 @@ class AddressManageViewCell: UITableViewCell {
             make.height.equalTo(setDefaultBtn)
             make.right.equalTo(editBtn.snp.left).offset(-2)
         }
+        
         
         deleteBtn.snp.makeConstraints { (make) in
             make.right.equalToSuperview()

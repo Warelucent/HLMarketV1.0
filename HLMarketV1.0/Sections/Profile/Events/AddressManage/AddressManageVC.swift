@@ -99,7 +99,7 @@ class AddressManageVC: UITableViewController {
         let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: indexPath) as! AddressManageViewCell
         cell.addressUserModel = userAddressModels?[indexPath.row]
         cell.cellID = indexPath.row
-        
+        cell.delegate = self
         if indexPath.row == selectedIndex {
             cell.isChoosed = true
         } else {
@@ -107,33 +107,15 @@ class AddressManageVC: UITableViewController {
         }
         
         cell.clickDefaultBtnClosure = {(cellId:Int, sender:UIButton) in
-            
-            print("你点击了位置在:\(cellId)的btn")
             self.selectedIndex = cellId
-            /*
-            for i in 0..<self.userAddressModels!.count {
-                let theIndexPath = IndexPath.init(row: i, section: indexPath.section)
-                let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: theIndexPath) as! AddressManageViewCell
-                cell.addressUserModel = self.userAddressModels?[indexPath.row]
-                cell.cellID = indexPath.row
-                if i == cellId {
-                    cell.isChoosed = true
-                } else {
-                    cell.isChoosed = false
-                }
-            }
             self.tableView.reloadData()
-            */
         }
         return cell
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        let cell:AddressManageViewCell = tableView.dequeueReusableCell(withIdentifier: kProfileAdressManageCellID, for: indexPath) as! AddressManageViewCell
-        if let state = cell.isChoosed {
-            print("\(indexPath.row)---------\(state)")
+        
         }
-    }
 
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -144,39 +126,72 @@ class AddressManageVC: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
 }
+
+
+extension AddressManageVC:AddressManageViewCellDelegate {
+    
+    func deleteAdress(sender:UIButton, cellID:Int) {
+        
+        let alertVC = UIAlertController.init(title: "是否确定删除该地址", message: nil, preferredStyle: .alert)
+        
+        let confirmAction = UIAlertAction.init(title: "确定", style: .default) { (alertAction:UIAlertAction) in
+            //1. 从本地数据源中删除数据
+            self.userAddressModels?.remove(at: cellID)
+            //2. 刷新视图
+            self.tableView.deleteRows(at: [IndexPath.init(item: cellID, section: 0)], with: .left)
+            self.tableView.reloadData()
+            //3. 网络发送请求,说明该数据被删除
+            // DispatchQueue.global().async(execute: {
+                if let addressId = self.userAddressModels?[cellID].AddressID {
+                
+                    AlamofireNetWork.required(urlString: "/Simple_online/Delete_Address",method: .post,
+                        parameters: ["AddressID":addressId],success: { (result) in
+                            
+                            let json = JSON(result)
+                            if json["resultStatus"] == "1" {
+                                self.showHint(in: self.view, hint: "删除成功")
+                            }
+                        },failure: { (error) in
+                            print(error)
+                        })
+                    
+                }
+            //})
+            
+            
+        }
+        
+        let  cancelAction = UIAlertAction.init(title: "取消", style: .cancel) { (alertAction:UIAlertAction) in
+        }
+        
+        alertVC.addAction(confirmAction)
+        alertVC.addAction(cancelAction)
+        
+        self.present(alertVC, animated: true, completion: nil)
+        
+    }
+    
+    func editAddress(sender:UIButton, cellID:Int) {
+        
+        if let userAddressModels = self.userAddressModels {
+            let model = userAddressModels[cellID]
+            
+            let editAddressVC = EditAddressVC()
+            editAddressVC.model = model
+            self.navigationController?.pushViewController(editAddressVC, animated: true)
+            
+        }
+        
+        
+        
+        
+        
+        
+    }
+    
+    
+}
+
+
+

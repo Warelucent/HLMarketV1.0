@@ -2,11 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "hlm_home_menu.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "hlm_cellHeader@2x.png",
       "scale" : "2x"
     },
     {

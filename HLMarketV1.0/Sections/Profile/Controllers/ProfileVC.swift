@@ -18,7 +18,7 @@ class ProfileVC: BaseViewController {
     
     lazy var profileTableView:UITableView = {[weak self] in
         let tableRect = CGRect(x: 0, y: 0, width: kScreenW, height: kScreenH - kTabBarH)
-        let tableview = UITableView.init(frame: tableRect, style: UITableViewStyle.plain)
+        let tableview = UITableView.init(frame: tableRect, style: UITableViewStyle.grouped)
         
         tableview.showsVerticalScrollIndicator = false
         tableview.backgroundColor = UIColor.init(gray: 252)
@@ -35,18 +35,6 @@ class ProfileVC: BaseViewController {
         tableview.register(ProfileInfoLabelCell.self, forCellReuseIdentifier:kProfileInfoLabelCellID)
         tableview.register(ProfileCollectionCell.self, forCellReuseIdentifier: kProfileCollectionCellID)
         
-        
-        let headerRect = CGRect(x: 0, y: 0, width: kScreenW, height: (kNavigationBarH + kStatusBarH) * 2)
-        let headerView = ProfileHeaderView.init(frame: headerRect)
-        tableview.tableHeaderView = headerView
-        headerView.loginCallBack = {[weak self] in
-            let registerVC = LoginViewController()
-            self?.navigationController?.pushViewController(registerVC, animated: true)
-        }
-        headerView.uploadPicCallBack = {[weak self] in
-            self?.uploadPicAction()
-        }
-        
         return tableview
     }()
     
@@ -56,8 +44,18 @@ class ProfileVC: BaseViewController {
         self.view.addSubview(profileTableView)
         self.view.backgroundColor = UIColor.init(gray: 252)
         
+        let notificationName = Notification.Name(rawValue: "loginSucessNotification")
+        NotificationCenter.default.addObserver(self,selector:#selector(successLogin(notification:)), name: notificationName, object: nil)
+        
     }
 
+    func successLogin(notification:NSNotification) {
+        self.profileTableView.reloadData()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
@@ -171,7 +169,7 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch section {
         case 0:
-            return 0
+            return (kNavigationBarH + kStatusBarH) * 2
         case 3:
             return 0
         default:
@@ -192,7 +190,16 @@ extension ProfileVC:UITableViewDataSource, UITableViewDelegate {
             
             return newheader
         } else if section == 0 {
-            return nil
+            let headerRect = CGRect(x: 0, y: 0, width: kScreenW, height: (kNavigationBarH + kStatusBarH) * 2)
+            let headerView = ProfileHeaderView.init(frame: headerRect)
+            headerView.loginCallBack = {[weak self] in
+                let registerVC = LoginViewController()
+                self?.navigationController?.pushViewController(registerVC, animated: true)
+            }
+            headerView.uploadPicCallBack = {[weak self] in
+                self?.uploadPicAction()
+            }
+            return headerView
         } else {
             return nil
         }
@@ -305,31 +312,6 @@ extension ProfileVC:UIImagePickerControllerDelegate,UINavigationControllerDelega
     public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]){
         
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            //let imageData = UIImagePNGRepresentation(image)
-            /*
-            Alamofire.upload(imageData!, to: "http://zhaoqiuyang.xicp.net:35635/Simple_online/Upload_User_Image").responseJSON { response in
-                debugPrint(response)
-            }
-             */
-            /*
-            Alamofire.upload(
-                multipartFormData: { multipartFormData in
-                    multipartFormData.append(unicornImageURL, withName: "unicorn")
-                    multipartFormData.append(rainbowImageURL, withName: "rainbow")
-            },
-                to: "https://httpbin.org/post",
-                encodingCompletion: { encodingResult in
-                    switch encodingResult {
-                    case .success(let upload, _, _):
-                        upload.responseJSON { response in
-                            debugPrint(response)
-                        }
-                    case .failure(let encodingError):
-                        print(encodingError)
-                    }
-            }
-            )
-             */
             let homeDirectory = NSHomeDirectory()
             let documentPath = homeDirectory + "/Documents"
             print(documentPath)

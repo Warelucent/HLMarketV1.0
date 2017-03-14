@@ -12,16 +12,16 @@ class AddNewAdressInfoCell: UITableViewCell {
 
     lazy var titleLabel = { () -> UILabel in
         let label = UILabel.init()
-        label.textColor = UIColor.init(gray: 168)
+        label.textColor = UIColor.init(gray: 118)
         label.textAlignment = NSTextAlignment.center
-        label.font = UIFont.systemFont(ofSize: 12)
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     
    lazy var inputTextField = { () -> UITextField in
         let textfield = UITextField.init()
-        textfield.font = UIFont.systemFont(ofSize: 14)
-        textfield.textColor = UIColor.appMainColor()
+        textfield.font = UIFont.systemFont(ofSize: 16)
+    
         return textfield
     }()
     
@@ -35,6 +35,7 @@ class AddNewAdressInfoCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(titleLabel)
         self.contentView.addSubview(inputTextField)
+        inputTextField.delegate = self
     }
     
     override func layoutSubviews() {
@@ -62,5 +63,17 @@ class AddNewAdressInfoCell: UITableViewCell {
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+extension AddNewAdressInfoCell:UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        inputTextField.resignFirstResponder()
     }
 }

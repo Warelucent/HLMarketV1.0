@@ -14,9 +14,14 @@ private let kOrderPayAdressCellID = "kOrderPayAdressCellID"
 
 class OrderPayVC: BaseViewController {
     
+    var selectedIndexs:[Int] = []
     var dataSource:[ShopCartServerModel] = []
+    var totalMoney:Float = 0
     var addressModel:AddressUserModel?
     var freightCost:String?
+    
+    
+    var totalMoneyLabel:UILabel?
     
     lazy var orderPayTableView:UITableView = {[weak self] in
         let rect = CGRect(x: 0, y: 0, width: kScreenW, height: kScreenH - kTabBarH - kNavigationBarH - kStatusBarH)
@@ -38,8 +43,6 @@ class OrderPayVC: BaseViewController {
         view.backgroundColor = UIColor.init(r:247,g:199,b:9)
         
         let label = UILabel.init()
-        let totalPay = "88.8"
-        label.text = "实付金额:\(totalPay)"
         label.textAlignment = .right
         
         let btn = UIButton.init(type: .system)
@@ -122,7 +125,7 @@ extension OrderPayVC:UITableViewDataSource, UITableViewDelegate {
             return 1
         } else if section == 1 {
             //MARK: --- 根据购物车里商品数量, 动态生成
-            return 1
+            return self.selectedIndexs.count
         } else {
             return 2
         }
@@ -137,7 +140,12 @@ extension OrderPayVC:UITableViewDataSource, UITableViewDelegate {
         } else if indexPath.section == 1 {
             
             let cell:OrderPayGoodsInfoCell = tableView.dequeueReusableCell(withIdentifier: kOrderPayGoodsInfoCellID, for: indexPath) as! OrderPayGoodsInfoCell
-            let model = GoodsControlModel.init(dict: ["avtarImage":"hlm_test_pic.jpeg", "price":"12.0", "title":"西瓜", "count":"3"])
+            
+            let modelPosition = self.selectedIndexs[indexPath.row]
+            
+            let servermodel = self.dataSource[modelPosition]
+
+            let model = GoodsControlModel.init(dict: ["avtarImage":"hlm_test_pic.jpeg", "price":servermodel.Last_Price, "title":servermodel.cGoodsName, "count":servermodel.Num])
             cell.goodsControlView.model = model
             
             return cell

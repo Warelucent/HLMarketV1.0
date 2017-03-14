@@ -20,9 +20,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow.init(frame: UIScreen.main.bounds)
         self.window?.backgroundColor = UIColor.white;
         
+        let version = Bundle.main.infoDictionary!["CFBundleShortVersionString"] as! String
         
-        let rootVC = TabBarController.init()
-        window?.rootViewController = rootVC
+        if let guide: [String:String] = userDefault.value(forKey: "GuideHistory") as! [String:String]?, guide["tag"] == "1",guide["version"] == version{
+            let rootVC = TabBarController.init()
+            window?.rootViewController = rootVC
+        }else {
+            userDefault.setValue(["tag":"1","version":version], forKey: "GuideHistory")
+            let vc = GuideVC()
+            window?.rootViewController = vc
+        }
+        
         self.window?.makeKeyAndVisible();
         
         

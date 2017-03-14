@@ -102,6 +102,9 @@ class GoodsDetailTableViewCell: UITableViewCell {
     var goodsDetailModel:GoodsModel? {
         didSet {
             if (goodsDetailModel != nil) {
+                
+                super.layoutIfNeeded()
+                
                 goodsImageView.image = UIImage.init(named: (goodsDetailModel?.cGoodsImagePath)!)
                 nameLabel.text  = goodsDetailModel?.cGoodsName
                 if (goodsDetailModel?.fVipPrice) != ""{

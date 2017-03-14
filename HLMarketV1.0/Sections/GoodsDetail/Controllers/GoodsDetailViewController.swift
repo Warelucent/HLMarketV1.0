@@ -23,6 +23,7 @@ class GoodsDetailViewController: BaseViewController {
 
         let btn = UIButton(frame: CGRect(x: 10 , y: 30, width: 44, height: 44))
         btn.setImage(UIImage.init(named: "hlm_back_icon"), for: UIControlState.normal)
+        btn.setImage(UIImage.init(named: "hlm_back_icon"), for: UIControlState.selected)
         btn.layer.cornerRadius = 22
         btn.layer.masksToBounds = true
         btn.sizeToFit()
@@ -118,8 +119,6 @@ class GoodsDetailViewController: BaseViewController {
         
         AlamofireNetWork.required(urlString: "/Simple_online/Select_GoodsDetail", method: .post, parameters: parameters, success: { (result) in
             
-            print(result)
-            
             let json = JSON(result)
             
             if json["resultStatus"] == "1" {
@@ -136,7 +135,7 @@ class GoodsDetailViewController: BaseViewController {
                 self.goodsModel?.fNormalPrice = self.price
                 self.goodsModel?.fVipPrice = self.vipPrice
                 
-                self.dataArr2 = GoodsTagModel.mj_objectArray(withKeyValuesArray: arr2) as! Array<GoodsTagModel>
+                self.dataArr2 = GoodsTagModel.mj_objectArray(withKeyValuesArray: arr2).copy() as! Array<GoodsTagModel>
                 
                 self.tableView.reloadData()
                 
@@ -164,7 +163,7 @@ extension GoodsDetailViewController {
     }
     
     func backAction() -> Void {
-        self.navigationController?.popViewController(animated: true)
+        _ = self.navigationController?.popViewController(animated: true)
     }
 }
 
@@ -175,7 +174,7 @@ extension GoodsDetailViewController:UITableViewDelegate, UITableViewDataSource {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return self.goodsModel == nil ? 0 : 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

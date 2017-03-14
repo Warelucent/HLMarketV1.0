@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class HomeClassifyTypeCollectionViewCell: UICollectionViewCell {
     
@@ -30,7 +31,7 @@ class HomeClassifyTypeCollectionViewCell: UICollectionViewCell {
     
     var classifyTypeModel:ClassifyTypeModel? {
         didSet {
-            imageView.image = UIImage.init(named: (classifyTypeModel?.cIMG)!)
+            imageView.kf.setImage(with: URL.init(string: (classifyTypeModel?.cIMG)!) as Resource?, placeholder: #imageLiteral(resourceName: "hlm_test_pic"))
             nameLabel.text  = classifyTypeModel?.cGroupTypeName
         }
     }

@@ -18,6 +18,7 @@ class PageTitleView: UIView {
     
     fileprivate var currentLabelIndex :Int = 0
     fileprivate var titles :[String]
+    fileprivate var isDoubleClick: Bool = false
     fileprivate lazy var titleLabels : [UILabel] = [UILabel]()
     
     fileprivate lazy var scrollView : UIScrollView = {
@@ -36,8 +37,9 @@ class PageTitleView: UIView {
         return scrollLine
     }()
     
-    init(frame : CGRect, titles : [String]){
+    init(frame : CGRect, titles : [String],isDoubleClick: Bool = false){
         self.titles = titles
+        self.isDoubleClick = isDoubleClick
         super.init(frame : frame)
         setupUI()
     }
@@ -98,7 +100,7 @@ extension PageTitleView {
 extension PageTitleView {
     @objc fileprivate func titleLabelClick(_ tapGes:UITapGestureRecognizer){
         guard let currentLabel = tapGes.view as? UILabel else { return }
-        if currentLabel.tag == currentLabelIndex { return }
+        if currentLabel.tag == currentLabelIndex && isDoubleClick == false { return }
         let oldLabel = titleLabels[currentLabelIndex]
         currentLabel.textColor = UIColor(r: kSelectColor.0, g: kSelectColor.1, b: kSelectColor.2)
         oldLabel.textColor = UIColor(r: kNormalColor.0, g: kNormalColor.1, b: kNormalColor.2)

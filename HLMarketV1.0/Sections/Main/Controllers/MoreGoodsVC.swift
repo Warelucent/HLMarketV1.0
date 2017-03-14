@@ -1,20 +1,19 @@
 //
-//  SearchVC1.swift
+//  MoreGoodsVC.swift
 //  HLMarketV1.0
 //
-//  Created by 彭仁帅 on 2017/3/11.
+//  Created by 彭仁帅 on 2017/3/14.
 //  Copyright © 2017年 @egosuelee. All rights reserved.
 //
 
 import UIKit
 import SwiftyJSON
 
-private let kSearchCellCollectionViewCellID = "kSearchCellCollectionViewCellID"
+private let kMoreGoodsCellCollectionViewCellID = "kMoreGoodsCellCollectionViewCellID"
 
-
-class SearchVC1: BaseViewController {
+class MoreGoodsVC: BaseViewController {
     
-    var searchStr = ""
+    var data: (title:String,fage:String)?
     
     fileprivate lazy var collectionView: UICollectionView =  { [weak self] in
         
@@ -31,12 +30,12 @@ class SearchVC1: BaseViewController {
         let colView = UICollectionView(frame: rect, collectionViewLayout:layout)
         colView.delegate = self
         colView.dataSource = self
-        colView.register(ShopCartStyleCell.self, forCellWithReuseIdentifier: kSearchCellCollectionViewCellID)
+        colView.register(ShopCartStyleCell.self, forCellWithReuseIdentifier: kMoreGoodsCellCollectionViewCellID)
         colView.backgroundColor = UIColor.white
         return colView
         }()
     
-    fileprivate var dataArr = Array<ShopCartStyleModel>()
+    fileprivate var dataArr = Array<VADModel>()
     
     fileprivate var currentPage = 1
     
@@ -44,20 +43,25 @@ class SearchVC1: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = self.data?.title ?? "更多"
+        
         self.view.backgroundColor = UIColor.init(gray: 254)
         
         self.view.addSubview(collectionView)
         
-        getSearchDate(fage: searchStr, pages: currentPage)
+        getMoreGoodsDate(fage: self.data?.fage ?? "1", pages: currentPage)
         
     }
     
     // MARK: -- 获取数据
-    func getSearchDate(fage: String, pages: Int) -> Void {
+    func getMoreGoodsDate(fage: String, pages: Int) -> Void {
         
-        let parameters = ["Sort_type":"4","fage":fage,"Number_of_pages":"\(pages)"]
+        let parameters = ["fage":fage,"Number_of_pages":"\(pages)"]
         
-        AlamofireNetWork.required(urlString: "/Simple_online/Select_Search_Goods", method: .post, parameters: parameters, success: { (result) in
+        AlamofireNetWork.required(urlString: "/Simple_online/Strategy_More_Goods", method: .post, parameters: parameters, success: { (result) in
+            
+            print(result)
             
             let json = JSON(result)
             
@@ -65,7 +69,7 @@ class SearchVC1: BaseViewController {
                 
                 let data = json["dDate"].arrayObject
                 
-                let modelArr = ShopCartStyleModel.mj_objectArray(withKeyValuesArray: data).copy() as! Array<ShopCartStyleModel>
+                let modelArr = VADModel.mj_objectArray(withKeyValuesArray: data).copy() as! Array<VADModel>
                 
                 self.dataArr = self.dataArr + modelArr
                 
@@ -81,7 +85,7 @@ class SearchVC1: BaseViewController {
                     self.isLoad = false
                     self.currentPage -= 1
                 }
-
+                
             }
             
         }) { (error) in
@@ -96,12 +100,12 @@ class SearchVC1: BaseViewController {
 }
 
 // MARK: -- UICollectionViewDelegate, UICollectionViewDataSource
-extension SearchVC1:UICollectionViewDelegate, UICollectionViewDataSource {
+extension MoreGoodsVC:UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return dataArr.count
     }
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell:ShopCartStyleCell = collectionView.dequeueReusableCell(withReuseIdentifier: kSearchCellCollectionViewCellID, for: indexPath) as! ShopCartStyleCell
+        let cell:ShopCartStyleCell = collectionView.dequeueReusableCell(withReuseIdentifier: kMoreGoodsCellCollectionViewCellID, for: indexPath) as! ShopCartStyleCell
         
         cell.backgroundColor = UIColor.white
         
@@ -115,7 +119,7 @@ extension SearchVC1:UICollectionViewDelegate, UICollectionViewDataSource {
         
         let model = dataArr[indexPath.row]
         model.cGoodsImagePath = "hlm_test_pic.jpg"
-        cell.shopCartModel = model
+        cell.vADModel = model
         return cell
     }
     
@@ -126,7 +130,7 @@ extension SearchVC1:UICollectionViewDelegate, UICollectionViewDataSource {
         let vc = GoodsDetailViewController()
         vc.cGoodsNo = model.cGoodsNo
         vc.price = model.fNormalPrice
-        vc.vipPrice = model.fVipPrice
+        vc.vipPrice = model.Recommend_price
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -135,7 +139,7 @@ extension SearchVC1:UICollectionViewDelegate, UICollectionViewDataSource {
         if  collectionView.cellForItem(at: IndexPath(row: dataArr.count - 3, section: 0)) != nil && self.isLoad {
             self.isLoad = false
             currentPage += 1
-            getSearchDate(fage: "0", pages: currentPage)
+            getMoreGoodsDate(fage: self.data?.fage ?? "1", pages: currentPage)
         }
     }
     

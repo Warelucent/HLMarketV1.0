@@ -35,7 +35,7 @@ class ANASetDefaultCell: UITableViewCell {
         let label = UILabel.init()
         label.text = "设为默认收货地址"
         label.textColor = UIColor.init(gray: 110)
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont.systemFont(ofSize: 16)
         return label
     }()
     

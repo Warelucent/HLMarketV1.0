@@ -31,6 +31,11 @@ class AddressUserModel: NSObject {
             return Provincial + City + District + Detailaddress
         }
     }
+    var UserMainAdressInfo:String? {
+        get {
+            return Provincial + City + District
+        }
+    }
     
     init(dict : [String : Any]) {
         super.init()

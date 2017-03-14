@@ -9,18 +9,42 @@
 import UIKit
 
 
+typealias ShopCartClosure = (_ cellID:Int) ->Void
 
 //MARK: --- 可以在每个cell的增减按钮上面添加一个删除和收藏按钮
-
+protocol ShopCartVCTableCellDelegate {
+    func numberButtonResult(_ numberButton: PPNumberButton, number: String, cellID:Int)
+}
 class ShopCartVCTableCell: UITableViewCell {
 
-    dynamic var isChecked:Bool = false
+    var addClosure:ShopCartClosure?
+    var reduceClosure:ShopCartClosure?
+    var delegate:ShopCartVCTableCellDelegate?
+    
+    var cellID:Int = 0
+    
+    var isChecked:Bool? {
+        didSet {
+            if let isChecked = isChecked {
+                if isChecked {
+                    checkBoxBtn.setImage(UIImage.init(named: "hlm_checkbox_select")?.withRenderingMode(.alwaysOriginal), for: .normal)
+                    if let addClosure = addClosure {
+                        addClosure(cellID)
+                    }
+                } else {
+                    checkBoxBtn.setImage(UIImage.init(named: "hlm_checkbox_nor")?.withRenderingMode(.alwaysOriginal), for: .normal)
+                    if let reduceClosure = reduceClosure {
+                        reduceClosure(cellID)
+                    }
+                }
+            }
+        }
+    }
     
     var model:ShopCartGoodModel? {
         didSet{
             let goodsControlModel = GoodsControlModel.init(dict: ["avtarImage":model!.avtarImage, "title":model!.name, "price":model!.price, "count":model!.count])
             goodsControlView.model = goodsControlModel
-            //isChecked = (model?.isSelected)!
         }
     }
     
@@ -34,28 +58,22 @@ class ShopCartVCTableCell: UITableViewCell {
     lazy var goodsControlView  = { () -> GoodsControlView in
         let rect = CGRect.zero
         let view = GoodsControlView.init(frame: rect, type: .plusOrReduce)
-//        let model = GoodsControlModel.init(dict: ["avtarImage":"hlm_test_pic.jpg", "title":"大白菜", "price":"3.8", "count":"2"])
-//        view.model = model
         return view
     }()
     
     
     func changeState() {
-        isChecked = !isChecked
-        if isChecked {
-            checkBoxBtn.setImage(UIImage.init(named: "hlm_checkbox_select")?.withRenderingMode(.alwaysOriginal), for: .normal)
-        } else {
-            checkBoxBtn.setImage(UIImage.init(named: "hlm_checkbox_nor")?.withRenderingMode(.alwaysOriginal), for: .normal)
+        if let isChecked = isChecked {
+            self.isChecked = !isChecked
         }
-        
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        
+        isChecked = false
         self.contentView.addSubview(checkBoxBtn)
         self.contentView.addSubview(goodsControlView)
+        goodsControlView.delegate = self
         self.addObserver(self, forKeyPath: "isChecked", options: .new, context: nil)
     }
     
@@ -81,8 +99,8 @@ class ShopCartVCTableCell: UITableViewCell {
         
     }
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        self.model?.isSelected = isChecked
-        print("4444444444444444\(keyPath)")
+        
+       
     }
     
     override var frame:CGRect{
@@ -93,6 +111,14 @@ class ShopCartVCTableCell: UITableViewCell {
             //newFrame.origin.y += 10
             newFrame.size.height -= 10
             super.frame = newFrame
+        }
+    }
+}
+
+extension ShopCartVCTableCell:GoodsControlViewDelegate {
+    func numberButtonResult(_ numberButton: PPNumberButton, number: String) {
+        if let delegate = delegate {
+            delegate.numberButtonResult(numberButton, number: number, cellID: cellID)
         }
     }
 }

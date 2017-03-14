@@ -11,11 +11,14 @@ import UIKit
 
 typealias  InfoClosure = ()->(totalPrice:String, freight:String)
 typealias  ClickVoidClosure = () -> Void
+typealias  CheckClosure = (_ isChecked:Bool) -> Void
 
 class ShopCartSetmentView: UIView {
 
     
     var setClickClosure:ClickVoidClosure?
+    var checkClosure:CheckClosure?
+    
     dynamic var isChecked:Bool  = false
     
     lazy var leftboxView = {UIView.init()}()
@@ -61,8 +64,9 @@ class ShopCartSetmentView: UIView {
         return btn
     }()
     
+   var infoClosure:InfoClosure?
     
-   init(frame: CGRect, infoColosure:InfoClosure) {
+   override init(frame: CGRect) {
         super.init(frame: frame)
         
         self.addSubview(leftboxView)
@@ -73,9 +77,25 @@ class ShopCartSetmentView: UIView {
         self.rightBoxView.addSubview(setMentBtn)
     
     setMentBtn.addTarget(self, action: #selector(clickForPayAction), for: .touchUpInside)
-    self.totalPriceLabel.text = "合计:\(infoColosure().totalPrice)元"
-    //self.freightLabel.text = "运费:\(infoColosure().freight)元"
+    if infoClosure != nil {
+        self.totalPriceLabel.text = "合计:\(infoClosure!().totalPrice)元"
+    } else {
+        self.totalPriceLabel.text = "合计:0元"
+    }
     self.addObserver(self, forKeyPath: "isChecked", options: .new, context: nil)
+    
+    
+    //MARK: --- 获取通知
+    let notificationName = Notification.Name(rawValue: "valueChangedNotification")
+    NotificationCenter.default.addObserver(self,selector:#selector(valueChanged(notification:)), name: notificationName, object: nil)
+
+    
+    }
+    
+    func valueChanged(notification:NSNotification) {
+        let userInfo = notification.userInfo as! [String: AnyObject]
+        let totalMoney = userInfo["totalMoney"] as! String
+        self.totalPriceLabel.text = "合计:\(totalMoney)元"
     }
     
     func clickForPayAction() {
@@ -83,6 +103,8 @@ class ShopCartSetmentView: UIView {
             setClickClosure!()
         }
     }
+    
+    
     
     
     
@@ -125,19 +147,11 @@ class ShopCartSetmentView: UIView {
     
     
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        print("122222222222222222222\(keyPath!)")
+        if  let checkClosure = checkClosure {
+            checkClosure(self.isChecked)
+        }
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.addSubview(leftboxView)
-        self.addSubview(rightBoxView)
-        self.leftboxView.addSubview(totalPriceLabel)
-        self.leftboxView.addSubview(freightLabel)
-        self.leftboxView.addSubview(checkBtn)
-        self.rightBoxView.addSubview(setMentBtn)
-    }
+
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

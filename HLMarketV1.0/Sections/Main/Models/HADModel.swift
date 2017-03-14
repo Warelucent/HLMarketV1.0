@@ -9,10 +9,12 @@
 import UIKit
 
 class HADModel: BaseModel {
-
+    
     var adcGoodsNo = ""
     var adcGoodsName = ""
     var describe = ""
     var adImagePath = ""
+    var fVipPrice = ""
+    var fNormalPrice = ""
     
 }

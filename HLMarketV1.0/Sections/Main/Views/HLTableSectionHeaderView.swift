@@ -16,6 +16,9 @@ class HLTableSectionHeaderView: UITableViewHeaderFooterView {
     
     @IBOutlet weak var titleLabel: UILabel!
     
+    @IBOutlet weak var typeImageView: UIImageView!
+    @IBOutlet weak var moreBtn: UIButton!
+    
     override func awakeFromNib() {
         let imageView = UIImageView(image: UIImage(color: UIColor.white))
         imageView.frame = self.frame
